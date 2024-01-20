@@ -32,11 +32,11 @@ module circuito_exp3_ativ2 (clock, zera, carrega, conta, chaves,
     // contador_163
     contador_163 contador (
       .clock( clock ),
-      .clr  ( ~zera ), //verifiquem pls se é baixo mesmo, to em dúvida por causa da dica 2 do relatório
+      .clr  ( ~zera ), 
       .ld   ( ~carrega ),
       .ent  ( 1'b1 ),
       .enp  ( conta ),
-      .D    ( chaves ), // acho que é isso, olhem a figura 2 do circuito. Chaves parece ser o valor de entrada tanto do contador quanto do comparador
+      .D    ( chaves ), 
       .Q    ( s_contagem ),
       .rco  ( fim )
     );
@@ -45,7 +45,7 @@ module circuito_exp3_ativ2 (clock, zera, carrega, conta, chaves,
     comparador_85 comparador (
       .A   ( s_contagem ),
       .B   ( chaves ),
-      .ALBi( COMPLETAR ), //je ne sais pas
+      .ALBi( 1'b0 ), 
       .AGBi( 1'b0 ),
       .AEBi( 1'b1 ),
       .ALBo( menor ), 
