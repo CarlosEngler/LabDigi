@@ -29,6 +29,7 @@ module circuito_exp3_ativ2 (clock, zera, carrega, conta, chaves,
     output       igual;
     output       fim;
     output [6:0] db_contagem;
+    output [6:0] db_chaves;
 
     wire   [3:0] s_contagem;  // sinal interno para interligacao dos componentes
 
@@ -59,6 +60,11 @@ module circuito_exp3_ativ2 (clock, zera, carrega, conta, chaves,
     hexa7seg HEX0 (
       .hexa(s_contagem),
       .display(db_contagem)
+    );
+
+    hexa7seg HEX1 (
+      .hexa(chaves),
+      .display(db_chaves)
     );
 
 endmodule
