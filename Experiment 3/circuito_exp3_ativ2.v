@@ -18,7 +18,7 @@
  */
 
 module circuito_exp3_ativ2 (clock, zera, carrega, conta, chaves, 
-                            menor, maior, igual, fim, db_contagem);
+                            menor, maior, igual, fim, db_contagem, db_chaves);
     input        clock;
     input        zera;
     input        carrega;
