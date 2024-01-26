@@ -14,6 +14,7 @@
  *  Revisoes  :
  *      Data        Versao  Autor             Descricao
  *      11/01/2024  1.0     Edson Midorikawa  versao inicial
+ *      29/01/2024  2.0     Carlos Engler     versao final
  * ------------------------------------------------------------------
  */
 
