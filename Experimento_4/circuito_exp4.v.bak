@@ -39,7 +39,7 @@ wire [3:0] s_chaves;
 wire [3:0] s_memoria;
 
 
-FD exp4_fluxo_dados(
+	exp4_fluxo_dados FD(
     .clock(clock),
     .chaves(chaves),
     .zeraR(w_zeraR),
@@ -55,7 +55,7 @@ FD exp4_fluxo_dados(
     .db_memoria(s_memoria)
 );
 
-UC exp4_unidade_controle(
+	exp4_unidade_controle UC(
     .clock(clock),
     .reset(reset),
     .iniciar(iniciar),
@@ -69,19 +69,19 @@ UC exp4_unidade_controle(
 
 );
 
-HEX0 hexa7seg(
+	hexa7seg HEX0(
     .hexa(s_contagem), .display(db_contagem)
 );
 
-HEX1 hexa7seg(
+	hexa7seg HEX1(
     .hexa(s_memoria), .display(db_memoria)
 );
 
-HEX2 hexa7seg(
+	hexa7seg HEX2(
     .hexa(s_chaves), .display(db_chaves)
 );
 
-HEX5 hexa7seg(
+	hexa7seg HEX5(
     .hexa(s_estado), .display(db_estado)
 );
 

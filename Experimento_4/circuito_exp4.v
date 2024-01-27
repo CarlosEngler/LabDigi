@@ -13,7 +13,7 @@
 
 
 module circuito_exp4 (
- inout clock,
+ input clock,
  input reset,
  input iniciar,
  input [3:0] chaves,

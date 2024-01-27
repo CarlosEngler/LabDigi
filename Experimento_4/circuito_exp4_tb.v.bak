@@ -25,8 +25,6 @@ module circuito_exp4_tb;
     reg  [3:0] chaves_in  = 4'b0000;
     wire       pronto_out;
     wire       db_igual_out;
-wire       db_maior_out;
-wire       db_menor_out;
     wire       db_iniciar_out;
     wire [6:0] db_contagem_out;
     wire [6:0] db_memoria_out;
@@ -55,8 +53,6 @@ wire       db_menor_out;
       .db_memoria (db_memoria_out),
       .db_chaves  (db_chaves_out),
       .db_estado  (db_estado_out),
-	.db_menor  (db_maior_out),
-	.db_maior  (db_menor_out)	
     );
 
     // geracao dos sinais de entrada (estimulos)
