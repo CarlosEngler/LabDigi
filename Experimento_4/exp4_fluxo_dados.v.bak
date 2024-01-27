@@ -27,20 +27,28 @@ module exp4_fluxo_dados (
     output [3:0] db_memoria
 );
 
-	wire [3:0] s_endereco;
-	wire [3:0] s_chaves;
-	wire [3:0] s_dado;
-
     // contador_163
     contador_163 contador (
       .clock( clock ),
       .clr  ( ~zeraC ), 
       .ld   ( 1'b1 ),
-      .enp  ( contaC ),
+      .enp  ( 1'b1 ),
       .ent  ( 1'b1 ),
-      .D    ( 4'd0 ), 
+      .D    ( 1'b0 ), 
       .Q    ( s_endereco ),
       .rco  ( fimC )
+    );
+
+    // comparador_85
+    comparador_85 comparador (
+      .A   ( s_dado ),
+      .B   ( s_chaves ),
+      .ALBi( 1'b0 ), 
+      .AGBi( 1'b0 ),
+      .AEBi( 1'b1 ),
+      .ALBo( chavesMaiorMemoria ), 
+      .AGBo( chavesMenorMemoria ),
+      .AEBo( chavesIgualMemoria )
     );
 
     registrador_4 registrador (
@@ -54,25 +62,23 @@ module exp4_fluxo_dados (
     sync_rom_16x4 memoria (
         .clock ( clock ),
         .address ( s_endereco ),
-        .data_out (s_dado)
-    );
-	 
-	 // comparador_85
-    comparador_85 comparador (
-      .A   ( s_dado ),
-      .B   ( s_chaves ),
-      .ALBi( 1'b0 ), 
-      .AGBi( 1'b0 ),
-      .AEBi( 1'b1 ),
-      .ALBo( chavesMaiorMemoria ), 
-      .AGBo( chavesMenorMemoria ),
-      .AEBo( chavesIgualMemoria )
+        .data_out (db_memoria)
     );
 
-	 
-assign db_chaves = s_chaves;
-assign db_memoria = s_dado;
-assign db_contagem = s_endereco;
+    hexa7seg HEX0 (
+      .hexa(s_endereco),
+      .display(db_contagem)
+    );
+
+    hexa7seg HEX1 (
+      .hexa(s_chaves),
+      .display(db_chaves)
+    );
+
+    hexa7seg HEX2 (
+      .hexa(s_dado),
+      .display(db_memoria)
+    );
 
 
 
