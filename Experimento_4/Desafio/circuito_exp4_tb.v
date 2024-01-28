@@ -25,8 +25,10 @@ module circuito_exp4_tb;
     reg  [3:0] chaves_in  = 4'b0000;
     wire       pronto_out;
     wire       db_igual_out;
-wire       db_maior_out;
-wire       db_menor_out;
+    wire       db_maior_out;
+    wire       db_menor_out;
+    wire       db_acertou_out;
+    wire       db_errou_out;
     wire       db_iniciar_out;
     wire [6:0] db_contagem_out;
     wire [6:0] db_memoria_out;
@@ -49,6 +51,8 @@ wire       db_menor_out;
       .iniciar    (iniciar_in),
       .chaves     (chaves_in),
       .pronto     (pronto_out),
+      .acertou    (db_acertou_out),
+      .errou      (db_errou_out),
       .db_igual   (db_igual_out),
       .db_iniciar (db_iniciar_out),
       .db_contagem(db_contagem_out),
@@ -86,7 +90,7 @@ wire       db_menor_out;
       // Teste 3 (ajustar chaves para 0100, acionar iniciar por 1 periodo de clock)
       caso = 3;
       @(negedge clock_in);
-      chaves_in = 4'b0100;
+      chaves_in = 4'b0001;
       // pulso em iniciar
       iniciar_in = 1;
       #(clockPeriod);
@@ -95,80 +99,98 @@ wire       db_menor_out;
       // Teste 4 (manter chaves em 0100 por 1 periodo de clock)
       caso = 4;
       @(negedge clock_in);
-      chaves_in = 4'b0100;
-      #(clockPeriod);
-
-      // Teste 5 (manter chaves em 0100 por 1 periodo de clock)
-      caso = 5;
-      @(negedge clock_in);
-      chaves_in = 4'b0100;
-      #(clockPeriod);
-
-      // Teste 6 (manter chaves em 0100 por 1 periodo de clock)
-      caso = 6;
-      @(negedge clock_in);
       chaves_in = 4'b0010;
-      #(clockPeriod);
+      #(3*clockPeriod);
 
-      // Teste 7 (manter chaves em 0100 por 3 periodos de clock)
-      caso = 7;
       @(negedge clock_in);
       chaves_in = 4'b0100;
       #(3*clockPeriod);
 
-      // Teste 8 (manter chaves em 0100 por 3 periodos de clock)
-      caso = 8;
-      @(negedge clock_in);
-      chaves_in = 4'b0100;
-      #(3*clockPeriod);
-
-      // Teste 9 (manter chaves em 0100 por 9 periodos de clock)
-      caso = 9;
-      @(negedge clock_in);
-      chaves_in = 4'b0100;
-      #(9*clockPeriod);
-
-      // Teste 10 (ajustar chaves para 0001 por 6 periodos de clock)
-      caso = 10;
-      @(negedge clock_in);
-      chaves_in = 4'b0001;
-      #(6*clockPeriod);
-
-      // Teste 11 (ajustar chaves para 0010 por 6 periodos de clock)
-      caso = 11;
-      @(negedge clock_in);
-      chaves_in = 4'b0010;
-      #(6*clockPeriod);
-
-      // Teste 12 (ajustar chaves para 0100 por 6 periodos de clock) 
-      caso = 12;
-      @(negedge clock_in);
-      chaves_in = 4'b0100;
-      #(6*clockPeriod);
-
-      // Teste 13 (ajustar chaves para 1000 por 6 periodos de clock)
-      caso = 13;
       @(negedge clock_in);
       chaves_in = 4'b1000;
-      #(6*clockPeriod);
+      #(3*clockPeriod);
 
-      // Teste 14 (ajustar chaves para 0001 por 3 periodos de clock) 
-      caso = 14;
+      @(negedge clock_in);
+      chaves_in = 4'b0100;
+      #(3*clockPeriod);
+
+      @(negedge clock_in);
+      chaves_in = 4'b0010;
+      #(3*clockPeriod);
+
       @(negedge clock_in);
       chaves_in = 4'b0001;
       #(3*clockPeriod);
 
-      // Teste 15 (ajustar chaves para 0010 por 6 periodos de clock)
-      caso = 15;
+      @(negedge clock_in);
+      chaves_in = 4'b0001;
+      #(3*clockPeriod);
+
       @(negedge clock_in);
       chaves_in = 4'b0010;
-      #(6*clockPeriod);
+      #(3*clockPeriod);
 
-      // Teste 16 (ajustar chaves para 0000 por 1 periodo de clock)
-      caso = 16;
       @(negedge clock_in);
-      chaves_in = 4'b0000;
+      chaves_in = 4'b0010;
+      #(3*clockPeriod);
+
+      @(negedge clock_in);
+      chaves_in = 4'b0100;
+      #(3*clockPeriod);
+
+      @(negedge clock_in);
+      chaves_in = 4'b0100;
+      #(3*clockPeriod);
+
+      @(negedge clock_in);
+      chaves_in = 4'b1000;
+      #(3*clockPeriod);
+
+      @(negedge clock_in);
+      chaves_in = 4'b1000;
+      #(3*clockPeriod);
+
+      @(negedge clock_in);
+      chaves_in = 4'b0001;
+      #(3*clockPeriod);
+
+      @(negedge clock_in);
+      chaves_in = 4'b0100;
+      #(3*clockPeriod);
+
+      caso = 5;
+      @(negedge clock_in);
+      reset_in = 1;
       #(clockPeriod);
+      reset_in = 0;
+
+      caso = 6;
+      #(clockPeriod);
+
+      caso = 7;
+      @(negedge clock_in);
+      chaves_in = 4'b0001;
+      // pulso em iniciar
+      iniciar_in = 1;
+      #(clockPeriod);
+      iniciar_in = 0;
+
+      caso = 8;
+      @(negedge clock_in);
+      chaves_in = 4'b0010;
+      #(3*clockPeriod);
+
+      @(negedge clock_in);
+      chaves_in = 4'b0100;
+      #(3*clockPeriod);
+
+      @(negedge clock_in);
+      chaves_in = 4'b1000;
+      #(3*clockPeriod);
+
+      @(negedge clock_in);
+      chaves_in = 4'b0001;
+      #(5*clockPeriod);
 
       // final dos casos de teste da simulacao
       caso = 99;
