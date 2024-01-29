@@ -30,6 +30,11 @@ module circuito_exp4_tb;
     wire       db_acertou_out;
     wire       db_errou_out;
     wire       db_iniciar_out;
+    wire       db_zeraC_out;
+    wire       db_zeraR_out;
+    wire       db_registraR_out;
+    wire       db_contaC_out;
+    wire       db_fimC_out;
     wire [6:0] db_contagem_out;
     wire [6:0] db_memoria_out;
     wire [6:0] db_chaves_out;
@@ -59,8 +64,13 @@ module circuito_exp4_tb;
       .db_memoria (db_memoria_out),
       .db_chaves  (db_chaves_out),
       .db_estado  (db_estado_out),
-	    .db_menor  (db_maior_out),
-	    .db_maior  (db_menor_out)	
+	    .menor  (db_maior_out),
+	    .maior  (db_menor_out),
+      .db_zeraC(db_zeraC_out),
+      .db_zeraR(db_zeraR_out),
+      .db_registraR(db_registraR_out),
+      .db_contaC(db_contaC_out),
+      .db_fimC(db_fimC_out)
     );
 
     // geracao dos sinais de entrada (estimulos)
@@ -95,9 +105,14 @@ module circuito_exp4_tb;
       iniciar_in = 1;
       #(clockPeriod);
       iniciar_in = 0;
+      #(clockPeriod)
 
       // Teste 4 (manter chaves em 0100 por 1 periodo de clock)
       caso = 4;
+      @(negedge clock_in);
+      chaves_in = 4'b0001;
+      #(3*clockPeriod);
+
       @(negedge clock_in);
       chaves_in = 4'b0010;
       #(3*clockPeriod);
@@ -174,6 +189,7 @@ module circuito_exp4_tb;
       iniciar_in = 1;
       #(clockPeriod);
       iniciar_in = 0;
+      #(clockPeriod);
 
       caso = 8;
       @(negedge clock_in);

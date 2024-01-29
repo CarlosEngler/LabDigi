@@ -21,13 +21,14 @@ module circuito_exp4 (
  output acertou,
  output errou,
  output db_igual,
- output db_menor,
- output db_maior,
+ output menor,
+ output maior,
  output db_iniciar,
  output db_zeraC,
  output db_zeraR,
  output db_registraR,
  output db_contaC,
+ output db_fimC,
  output [6:0] db_contagem,
  output [6:0] db_memoria,
  output [6:0] db_chaves,
@@ -40,6 +41,8 @@ wire w_zeraC;
 wire w_zeraR;
 wire w_registraR;
 wire w_igual;
+wire w_menor;
+wire w_maior;
 wire [3:0] s_estado;
 wire [3:0] s_contagem;
 wire [3:0] s_chaves;
@@ -53,9 +56,9 @@ wire [3:0] s_memoria;
     .registraR(w_registraR),
     .contaC(w_contaC),
     .zeraC(w_zeraC),
-    .chavesMaiorMemoria(db_maior),
+    .chavesMaiorMemoria(w_menor),
     .chavesIgualMemoria(w_igual),
-    .chavesMenorMemoria(db_menor),
+    .chavesMenorMemoria(w_maior),
     .fimC(w_fimC),
     .db_contagem(s_contagem),
     .db_chaves(s_chaves),
@@ -100,6 +103,9 @@ assign db_zeraR = w_zeraR;
 assign db_registraR = w_registraR;
 assign db_contaC = w_contaC;
 assign db_igual = w_igual;
+assign db_fimC = w_fimC;
+assign maior = ~w_maior;
+assign menor = ~w_menor;
 
 
 endmodule
