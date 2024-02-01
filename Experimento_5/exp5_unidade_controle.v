@@ -1,11 +1,10 @@
-//------------------------------------------------------------------
-// Arquivo   : exp4_unidade_controle.v
-// Projeto   : Experiencia 4 - Projeto de uma Unidade de Controle
-//------------------------------------------------------------------
-// Descricao : Unidade de controle
-//
-// usar este codigo como template (modelo) para codificar 
-// máquinas de estado de unidades de controle            
+// --------------------------------------------------------------------
+// Arquivo   : circuito_exp5_tb-MODELO.vhd
+// Projeto   : Experiencia 5 - Desenvolvimento de Projeto de 
+//             Circuitos Digitais em FPGA
+// --------------------------------------------------------------------
+// Descricao : 
+//          
 //------------------------------------------------------------------
 // Revisoes  :
 //     Data        Versao  Autor             Descricao

@@ -82,7 +82,7 @@ module circuito_exp5_tb_modelo;
       #clockPeriod;
 
       /*
-       * Cenario de Teste 1 - acerta as 16 jogadas
+       * Cenario de Teste 1 - acerta a 3 jogadas e erra a quarta
        */
 
       // Teste 1. resetar circuito
@@ -130,17 +130,8 @@ module circuito_exp5_tb_modelo;
       // espera entre jogadas
       #(10*clockPeriod);
 
-      // Teste 6. jogada #4 (ajustar chaves para 1000 por 10 periodos de clock
+      // Teste 6. jogada #4 errada (ajustar chaves para 0001 por 5 periodos de clock
       caso = 6;
-      @(negedge clock_in);
-      chaves_in = 4'b1000;
-      #(10*clockPeriod);
-      chaves_in = 4'b0000;
-      // espera entre jogadas
-      #(10*clockPeriod);
-
-      // Teste 7. jogada #5 errada (ajustar chaves para 0001 por 5 periodos de clock
-      caso = 7;
       @(negedge clock_in);
       chaves_in = 4'b0001; // jogada certa = 4'b0100
       #(5*clockPeriod);
