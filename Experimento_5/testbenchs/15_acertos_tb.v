@@ -1,18 +1,16 @@
 /* --------------------------------------------------------------------
- * Arquivo   : circuito_exp5_tb-MODELO.vhd
+ * Arquivo   : 16_acertos_tb.v
  * Projeto   : Experiencia 5 - Desenvolvimento de Projeto de 
  *             Circuitos Digitais em FPGA
  * --------------------------------------------------------------------
  * Descricao : testbench Verilog MODELO para circuito da Experiencia 5 
  *
- *             1) Plano de teste com 3 jogadas certas  
- *                e erro na quarta jogada
+ *             1) Plano de teste com 15 acertos, 1 erro mudança de estado das chaves sem ativar iniciar_in.
  *
  * --------------------------------------------------------------------
  * Revisoes  :
  *     Data        Versao  Autor             Descricao
- *     27/01/2024  1.0     Edson Midorikawa  versao inicial
- *     01/02/2024  1.1     Carlos Engler    3 acertos apenas
+ *     01/02/2024  1.1     Carlos Engler    versão inicial
  * --------------------------------------------------------------------
 */
 
@@ -83,7 +81,7 @@ module circuito_exp5_tb_modelo;
       #clockPeriod;
 
       /*
-       * Cenario de Teste 1 - acerta a 3 jogadas e erra a quarta
+       * Cenario de Teste 1 - acerta as 16 jogadas
        */
 
       // Teste 1. resetar circuito
@@ -104,7 +102,7 @@ module circuito_exp5_tb_modelo;
       // espera
       #(10*clockPeriod);
 
-      // Teste 3. jogada #1 (ajustar chaves para 0001 por 10 periodos de clock
+      // Teste 3. jogada #1 
       caso = 3;
       @(negedge clock_in);
       chaves_in = 4'b0001;
@@ -113,7 +111,7 @@ module circuito_exp5_tb_modelo;
       // espera entre jogadas
       #(10*clockPeriod);
 
-      // Teste 4. jogada #2 (ajustar chaves para 0010 por 10 periodos de clock
+      // Teste 4. jogada #2 
       caso = 4;
       @(negedge clock_in);
       chaves_in = 4'b0010;
@@ -122,7 +120,7 @@ module circuito_exp5_tb_modelo;
       // espera entre jogadas
       #(10*clockPeriod);
 
-      // Teste 5. jogada #3 (ajustar chaves para 0100 por 10 periodos de clock
+      // Teste 5. jogada #3 
       caso = 5;
       @(negedge clock_in);
       chaves_in = 4'b0100;
@@ -131,15 +129,140 @@ module circuito_exp5_tb_modelo;
       // espera entre jogadas
       #(10*clockPeriod);
 
-      // Teste 6. jogada #4 errada (ajustar chaves para 0001 por 5 periodos de clock
+      // Teste 6. jogada #4 
       caso = 6;
       @(negedge clock_in);
-      chaves_in = 4'b0001; // jogada certa = 4'b1000
+      chaves_in = 4'b1000; 
       #(5*clockPeriod);
       chaves_in = 4'b0000;
       // espera entre jogadas
       #(10*clockPeriod);
 
+      // Teste 7. jogada #5  
+      caso = 7;
+      @(negedge clock_in);
+      chaves_in = 4'b0100; 
+      #(5*clockPeriod);
+      chaves_in = 4'b0000;
+      // espera entre jogadas
+      #(10*clockPeriod);
+
+      // Teste 8. jogada #6 
+      caso = 8;
+      @(negedge clock_in);
+      chaves_in = 4'b0010; 
+      #(5*clockPeriod);
+      chaves_in = 4'b0000;
+      // espera entre jogadas
+      #(10*clockPeriod);
+
+      // Teste 9. jogada #7 
+      caso = 9;
+      @(negedge clock_in);
+      chaves_in = 4'b0001; 
+      #(5*clockPeriod);
+      chaves_in = 4'b0000;
+      // espera entre jogadas
+      #(10*clockPeriod);
+
+      // Teste 10. jogada #8 
+      caso = 10;
+      @(negedge clock_in);
+      chaves_in = 4'b0001; 
+      #(5*clockPeriod);
+      chaves_in = 4'b0000;
+      // espera entre jogadas
+      #(10*clockPeriod);
+
+      // Teste 11. jogada #9 
+      caso = 11;
+      @(negedge clock_in);
+      chaves_in = 4'b0010; 
+      #(5*clockPeriod);
+      chaves_in = 4'b0000;
+      // espera entre jogadas
+      #(10*clockPeriod);
+
+      // Teste 12. jogada #10 
+      caso = 12;
+      @(negedge clock_in);
+      chaves_in = 4'b0010; 
+      #(5*clockPeriod);
+      chaves_in = 4'b0000;
+      // espera entre jogadas
+      #(10*clockPeriod);
+
+      // Teste 13. jogada #11 
+      caso = 13;
+      @(negedge clock_in);
+      chaves_in = 4'b0100; 
+      #(5*clockPeriod);
+      chaves_in = 4'b0000;
+      // espera entre jogadas
+      #(10*clockPeriod);
+
+      // Teste 14. jogada #12 
+      caso = 14;
+      @(negedge clock_in);
+      chaves_in = 4'b0100; 
+      #(5*clockPeriod);
+      chaves_in = 4'b0000;
+      // espera entre jogadas
+      #(10*clockPeriod);
+
+      // Teste 15. jogada #13 
+      caso = 15;
+      @(negedge clock_in);
+      chaves_in = 4'b1000; 
+      #(5*clockPeriod);
+      chaves_in = 4'b0000;
+      // espera entre jogadas
+      #(10*clockPeriod);
+
+      // Teste 16. jogada #14 
+      caso = 16;
+      @(negedge clock_in);
+      chaves_in = 4'b1000; 
+      #(5*clockPeriod);
+      chaves_in = 4'b0000;
+      // espera entre jogadas
+      #(10*clockPeriod);
+
+      // Teste 17. jogada #15 
+      caso = 17;
+      @(negedge clock_in);
+      chaves_in = 4'b0001; 
+      #(5*clockPeriod);
+      chaves_in = 4'b0000;
+      // espera entre jogadas
+      #(10*clockPeriod);
+
+      // Teste 18. jogada #16  //erro para validar off by one
+      caso = 18;
+      @(negedge clock_in);
+      chaves_in = 4'b0010; 
+      #(5*clockPeriod);
+      chaves_in = 4'b0000;
+      // espera entre jogadas
+      #(10*clockPeriod);
+
+      // Teste 19. jogada #117 
+      caso = 19;
+      @(negedge clock_in);
+      chaves_in = 4'b0100; //jogada que seria certa na jogada anterior
+      #(5*clockPeriod);
+      chaves_in = 4'b0000;
+      // espera entre jogadas
+      #(10*clockPeriod);
+
+      //teste 12. iniciar novamente
+      caso = 20;
+      iniciar_in = 1;
+      #(5*clockPeriod);
+      iniciar_in = 0;
+      // espera
+      #(10*clockPeriod);
+    
 
       // final dos casos de teste da simulacao
       caso = 99;
