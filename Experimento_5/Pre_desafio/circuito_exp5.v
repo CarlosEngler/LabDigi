@@ -27,8 +27,7 @@ module circuito_exp5 (
  output [6:0] db_jogadafeita,
  output db_clock,
  output db_iniciar,
- output db_tem_jogada,
- output db_timeout
+ output db_tem_jogada
 );
 
 
@@ -39,8 +38,6 @@ wire w_zeraR;
 wire w_registraR;
 wire w_jogada_feita;
 wire w_igual;
-wire s_timeout;
-wire w_contaCM;
 wire [3:0] s_estado;
 wire [3:0] s_contagem;
 wire [3:0] s_chaves;
@@ -56,8 +53,6 @@ wire [3:0] s_memoria;
     .zeraC(w_zeraC),
     .igual(w_igual),
     .fimC(w_fimC),
-	 .contaCM(w_contaCM),
-	 .timeout(s_timeout),
     .db_contagem(s_contagem),
     .db_jogada(s_chaves),
     .db_memoria(s_memoria),
@@ -75,14 +70,11 @@ wire [3:0] s_memoria;
     .zeraR(w_zeraR),
     .registraR(w_registraR),
     .pronto(pronto),
-	 .timeout(s_timeout),
-	 .db_timeout(db_timeout),
     .db_estado(s_estado),
     .jogada(w_jogada_feita),
     .igual(w_igual),
     .acertou(acertou),
-    .errou(errou),
-	 .contaCM(w_contaCM)
+    .errou(errou)
 );
 
 	hexa7seg HEX0(

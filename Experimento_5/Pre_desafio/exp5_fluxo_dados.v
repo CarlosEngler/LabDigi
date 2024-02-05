@@ -17,13 +17,11 @@ module exp5_fluxo_dados (
     input contaC,
     input zeraR,
     input registraR,
-	 input contaCM,
     input [3:0] chaves,
     output igual,
     output fimC,
     output jogada_feita,
     output db_tem_jogada,
-	 output timeout,
     output [3:0] db_contagem,
     output [3:0] db_memoria,
     output [3:0] db_jogada
@@ -47,16 +45,6 @@ module exp5_fluxo_dados (
       .Q    ( s_endereco ),
       .rco  ( fimC )
     );
-	 
-	 contador_m #( .M(3000), .N(12) ) contador_de_timeout (
-		.clock  ( clock ),
-		.zera_as( zeraC | zeraR ),
-		.zera_s ( contaC ),
-		.conta  ( contaCM ),
-		.Q      (  ),
-		.fim    ( timeout ),
-		.meio   (  )
-  );
 
     registrador_4 registrador (
         .clock ( clock ),
