@@ -27,7 +27,8 @@ module circuito_exp5 (
  output [6:0] db_jogadafeita,
  output db_clock,
  output db_iniciar,
- output db_tem_jogada
+ output db_tem_jogada,
+ output db_timeout
 );
 
 
@@ -37,6 +38,9 @@ wire w_zeraC;
 wire w_zeraR;
 wire w_registraR;
 wire w_jogada_feita;
+wire w_igual;
+wire s_timeout;
+wire w_contaCM;
 wire [3:0] s_estado;
 wire [3:0] s_contagem;
 wire [3:0] s_chaves;
@@ -50,13 +54,15 @@ wire [3:0] s_memoria;
     .registraR(w_registraR),
     .contaC(w_contaC),
     .zeraC(w_zeraC),
-    .igual(db_igual),
+    .igual(w_igual),
     .fimC(w_fimC),
+	 .contaCM(w_contaCM),
+	 .timeout(s_timeout),
     .db_contagem(s_contagem),
     .db_jogada(s_chaves),
     .db_memoria(s_memoria),
     .jogada_feita(w_jogada_feita),
-    .db_tem_jogada(db_tem_jogada),
+    .db_tem_jogada(db_tem_jogada)
 );
 
 	exp5_unidade_controle UC(
@@ -69,11 +75,14 @@ wire [3:0] s_memoria;
     .zeraR(w_zeraR),
     .registraR(w_registraR),
     .pronto(pronto),
+	 .timeout(s_timeout),
+	 .db_timeout(db_timeout),
     .db_estado(s_estado),
     .jogada(w_jogada_feita),
-    .igual(igual),
+    .igual(w_igual),
     .acertou(acertou),
-    .errou(errou)
+    .errou(errou),
+	 .contaCM(w_contaCM)
 );
 
 	hexa7seg HEX0(
@@ -95,5 +104,6 @@ wire [3:0] s_memoria;
 assign db_iniciar = iniciar;
 assign db_clock = clock;
 assign leds = s_chaves;
+assign db_igual = w_igual;
 
 endmodule
