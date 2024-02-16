@@ -11,19 +11,19 @@
  * --------------------------------------------------------------------
 */
 
-module exp5_fluxo_dados (
+module exp6_fluxo_dados (
     input clock,
     input zeraC,
     input contaC,
     input zeraR,
     input registraR,
-	 input contaCM,
+	  input contaCM,
     input [3:0] chaves,
     output igual,
     output fimC,
     output jogada_feita,
     output db_tem_jogada,
-	 output timeout,
+	  output timeout,
     output [3:0] db_contagem,
     output [3:0] db_memoria,
     output [3:0] db_jogada
@@ -37,7 +37,18 @@ module exp5_fluxo_dados (
   assign sinal = chaves[0] | chaves [1] | chaves[2] | chaves [3];
 
     // contador_163
-    contador_163 contador (
+    contador_163 contador_de_endereco (
+      .clock( clock ),
+      .clr  ( ~zeraC ), 
+      .ld   ( 1'b1 ),
+      .enp  ( contaC ),
+      .ent  ( 1'b1 ),
+      .D    ( 4'd0 ), 
+      .Q    ( s_endereco ),
+      .rco  ( fimC )
+    );
+
+    contador_163 contador_de_rodada (
       .clock( clock ),
       .clr  ( ~zeraC ), 
       .ld   ( 1'b1 ),
@@ -48,7 +59,9 @@ module exp5_fluxo_dados (
       .rco  ( fimC )
     );
 	 
-	 contador_m #( .M(3000), .N(12) ) contador_de_timeout (
+  
+  
+	 contador_m #( .M(5000), .N(12) ) contador_de_timeout (
 		.clock  ( clock ),
 		.zera_as( zeraC | zeraR ),
 		.zera_s ( contaC ),
@@ -80,7 +93,18 @@ module exp5_fluxo_dados (
     );
 	 
 	 // comparador_85
-    comparador_85 comparador (
+    comparador_85 comparador_de_jogada (
+      .A   ( s_dado ),
+      .B   ( s_chaves ),
+      .ALBi( 1'b0 ), 
+      .AGBi( 1'b0 ),
+      .AEBi( 1'b1 ),
+      .ALBo( ), 
+      .AGBo( ),
+      .AEBo( igual )
+    );
+
+    comparador_85 comparador_de_endereco (
       .A   ( s_dado ),
       .B   ( s_chaves ),
       .ALBi( 1'b0 ), 

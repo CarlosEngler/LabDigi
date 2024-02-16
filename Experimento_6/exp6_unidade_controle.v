@@ -12,7 +12,7 @@
 //------------------------------------------------------------------
 //
 
-module exp5_unidade_controle (
+module exp6_unidade_controle (
  input clock,
  input reset,
  input iniciar,
@@ -24,8 +24,8 @@ module exp5_unidade_controle (
  output reg contaC,
  output reg zeraR,
  output reg registraR,
- output reg acertou,
- output reg errou,
+ output reg ganhou,
+ output reg perdeu,
  output reg pronto,
  output reg contaCM,
  output reg db_timeout,
@@ -39,9 +39,9 @@ module exp5_unidade_controle (
     parameter registra   = 4'b0100;  // 4
     parameter comparacao = 4'b0101;  // 5
     parameter proximo    = 4'b0110;  // 6
-	 parameter fim_T      = 4'b1011;  // B
+	parameter fim_T      = 4'b1011;  // B
     parameter fim_E      = 4'b1110;  // E
-	 parameter fim_A      = 4'b1010;  // A
+	parameter fim_A      = 4'b1010;  // A
 
     // Variaveis de estado
     reg [3:0] Eatual, Eprox;
@@ -63,9 +63,9 @@ module exp5_unidade_controle (
             registra:    Eprox = comparacao;
             comparacao:  Eprox = !igual ? fim_E : (fim ? fim_A : proximo);
             proximo:     Eprox = espera;
-				fim_T:       Eprox = iniciar ? preparacao: fim_T;
+			fim_T:       Eprox = iniciar ? preparacao: fim_T;
             fim_E:       Eprox = iniciar ? preparacao: fim_E;
-				fim_A:       Eprox = iniciar ? preparacao: fim_A;
+			fim_A:       Eprox = iniciar ? preparacao: fim_A;
             default:     Eprox = inicial;
         endcase
     end
@@ -77,10 +77,10 @@ module exp5_unidade_controle (
         registraR  = (Eatual == registra) ? 1'b1 : 1'b0;
         contaC     = (Eatual == proximo) ? 1'b1 : 1'b0;
         pronto     = (Eatual == fim_A || Eatual == fim_E || Eatual == fim_T) ? 1'b1 : 1'b0;
-		  db_timeout = (Eatual == fim_T) ? 1'b1 : 1'b0;
-        acertou    = (Eatual == fim_A) ? 1'b1 : 1'b0;
-        errou      = (Eatual == fim_E || Eatual == fim_T) ? 1'b1 : 1'b0;
-		  contaCM    = (Eatual == espera) ? 1'b1 : 1'b0;
+		db_timeout = (Eatual == fim_T) ? 1'b1 : 1'b0;
+        ganhou     = (Eatual == fim_A) ? 1'b1 : 1'b0;
+        perdeu     = (Eatual == fim_E || Eatual == fim_T) ? 1'b1 : 1'b0;
+		contaCM    = (Eatual == espera) ? 1'b1 : 1'b0;
 
         // Saida de depuracao (estado)
         case (Eatual)
@@ -90,9 +90,9 @@ module exp5_unidade_controle (
             registra:    db_estado = 4'b0100;  // 4
             comparacao:  db_estado = 4'b0101;  // 5
             proximo:     db_estado = 4'b0110;  // 6
-				fim_T:       db_estado = 4'b1011;  // B
+			fim_T:       db_estado = 4'b1011;  // B
             fim_E:       db_estado = 4'b1110;  // E
-				fim_A:       db_estado = 4'b1010;  // A
+			fim_A:       db_estado = 4'b1010;  // A
             default:     db_estado = 4'b1111;  // F
         endcase
     end

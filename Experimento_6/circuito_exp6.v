@@ -11,15 +11,16 @@
  * --------------------------------------------------------------------
 */
 
-module circuito_exp5 (
+module circuito_exp6 (
  input clock,
  input reset,
  input iniciar,
  input [3:0] chaves,
- output acertou,
- output errou,
- output pronto,
  output [3:0] leds,
+ output ganhou,
+ output perdeu,
+ output pronto,
+
  output db_igual,
  output [6:0] db_contagem,
  output [6:0] db_memoria,
@@ -47,7 +48,7 @@ wire [3:0] s_chaves;
 wire [3:0] s_memoria;
 
 
-	exp5_fluxo_dados FD(
+	exp6_fluxo_dados FD(
     .clock(clock),
     .chaves(chaves),
     .zeraR(w_zeraR),
@@ -65,7 +66,7 @@ wire [3:0] s_memoria;
     .db_tem_jogada(db_tem_jogada)
 );
 
-	exp5_unidade_controle UC(
+	exp6_unidade_controle UC(
     .clock(clock),
     .reset(reset),
     .iniciar(iniciar),
@@ -80,9 +81,9 @@ wire [3:0] s_memoria;
     .db_estado(s_estado),
     .jogada(w_jogada_feita),
     .igual(w_igual),
-    .acertou(acertou),
-    .errou(errou),
-	 .contaCM(w_contaCM)
+    .ganhou(ganhou),
+    .perdeu(perdeu),
+	.contaCM(w_contaCM)
 );
 
 	hexa7seg HEX0(
