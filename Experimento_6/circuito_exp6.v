@@ -11,7 +11,7 @@
  * --------------------------------------------------------------------
 */
 
-module circuito_exp6 (
+module circuito_jogo_base (
  input clock,
  input reset,
  input jogar,

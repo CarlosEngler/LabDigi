@@ -5,7 +5,7 @@
  * --------------------------------------------------------------------
  * Descricao : testbench Verilog MODELO para circuito da Experiencia 5 
  *
- *             1) Plano de teste com acertos
+ *             1) Plano de testes com timeout na quarta rodada jogada 2
  *
  * --------------------------------------------------------------------
  * Revisoes  :
@@ -17,7 +17,7 @@
 
 `timescale 1ns/1ns
 
-module circuito_exp6_tb1;
+module circuito_exp6_tb2;
 
     // Sinais para conectar com o DUT
     // valores iniciais para fins de simulacao (ModelSim)
@@ -117,23 +117,15 @@ module circuito_exp6_tb1;
         for(jogadaInt = 0; jogadaInt <= rodadaInt; jogadaInt = jogadaInt + 1) begin
           caso = 3;
 
+          if(rodadaInt == 4 && jogadaInt == 2) begin
+            #(30*100000000*clockPeriod);
+          end
+
           case (jogadaInt)
             4'b0000: botoes_in = 4'b0001;
             4'b0001: botoes_in = 4'b0010;
             4'b0010: botoes_in = 4'b0100;
             4'b0011: botoes_in = 4'b1000;
-            4'b0100: botoes_in = 4'b0100;
-            4'b0101: botoes_in = 4'b0010;
-            4'b0110: botoes_in = 4'b0001;
-            4'b0111: botoes_in = 4'b0001;
-            4'b1000: botoes_in = 4'b0010;
-            4'b1001: botoes_in = 4'b0010;
-            4'b1010: botoes_in = 4'b0100;
-            4'b1011: botoes_in = 4'b0100;
-            4'b1100: botoes_in = 4'b1000;
-            4'b1101: botoes_in = 4'b1000;
-            4'b1110: botoes_in = 4'b0001;
-            4'b1111: botoes_in = 4'b0100;
           endcase
 
           #(5*clockPeriod);
