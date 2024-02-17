@@ -46,7 +46,7 @@ module exp6_unidade_controle (
     parameter registra          = 4'b0100;  // 4
     parameter comparacao        = 4'b0101;  // 5
     parameter proxima_jogada    = 4'b0110;  // 6
-    parameter ultima_rodada     = 4'b0111;  // 7
+    parameter ultima_jogada     = 4'b0111;  // 7
     parameter proxima_rodada    = 4'b1000;  // 8
 	parameter fim_A             = 4'b1010;  // A
     parameter atualiza_memoria  = 4'b1011;  // B
@@ -73,9 +73,9 @@ module exp6_unidade_controle (
             espera:             Eprox = timeout ? fim_T : (jogada ? registra : espera);
             registra:           Eprox = atualiza_memoria;
             atualiza_memoria:   Eprox = comparacao;
-            comparacao:         Eprox = !jogada_correta ? fim_E : (enderecoIgualRodada ? ultima_rodada : proxima_jogada);
+            comparacao:         Eprox = !jogada_correta ? fim_E : (enderecoIgualRodada ? ultima_jogada : proxima_jogada);
             proxima_jogada:     Eprox = espera;
-            ultima_rodada:      Eprox = fim ? fim_A : proxima_rodada;
+            ultima_jogada:      Eprox = fim ? fim_A : proxima_rodada;
             proxima_rodada:     Eprox = inicio;
 			fim_T:              Eprox = jogar ? preparacao : fim_T;
             fim_E:              Eprox = jogar ? preparacao : fim_E;
@@ -110,7 +110,7 @@ module exp6_unidade_controle (
             registra:          db_estado = 4'b0100;  // 4
             comparacao:        db_estado = 4'b0101;  // 5
             proxima_jogada:    db_estado = 4'b0110;  // 6
-            ultima_rodada:     db_estado = 4'b0111;  // 7
+            ultima_jogada:     db_estado = 4'b0111;  // 7
             proxima_rodada:    db_estado = 4'b1000;  // 8
 	        fim_A:             db_estado = 4'b1010;  // A
             atualiza_memoria:  db_estado = 4'b1011;  // B
