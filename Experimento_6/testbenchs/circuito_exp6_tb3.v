@@ -146,12 +146,6 @@ module circuito_exp6_tb3;
         end
       end
 
-          #(5*clockPeriod);
-          botoes_in = 4'b0000;
-          #(5*clockPeriod);
-        end
-      end
-
       // Incia o jogo novamente
       caso = 5;
       @(negedge clock_in);
