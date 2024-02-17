@@ -54,6 +54,22 @@ module circuito_exp6_tb2;
     // Configuração do clock
     parameter clockPeriod = 20; // in ns, f=50MHz
 
+
+    // Define estados
+    parameter idle              = 4'b0000;  // 0
+    parameter preparacao        = 4'b0001;  // 1
+    parameter inicio            = 4'b0010;  // 2
+    parameter espera            = 4'b0011;  // 3
+    parameter registra          = 4'b0100;  // 4
+    parameter comparacao        = 4'b0101;  // 5
+    parameter proxima_jogada    = 4'b0110;  // 6
+    parameter ultima_jogada     = 4'b0111;  // 7
+    parameter proxima_rodada    = 4'b1000;  // 8
+  	parameter fim_A             = 4'b1010;  // A
+    parameter atualiza_memoria  = 4'b1011;  // B
+	  parameter fim_T             = 4'b1101;  // D
+    parameter fim_E             = 4'b1110;  // E
+
     // Gerador de clock
     always #((clockPeriod / 2)) clock_in = ~clock_in;
 
