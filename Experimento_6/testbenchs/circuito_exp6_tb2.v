@@ -118,7 +118,7 @@ module circuito_exp6_tb2;
           caso = 3;
 
           if(rodadaInt == 3 && jogadaInt == 1) begin
-            #(3000*clockPeriod);
+            #(5001*clockPeriod);
           end
 
           case (jogadaInt)

@@ -23,7 +23,7 @@ module exp6_fluxo_dados (
     input registraLeds,
 	  input contaT,
     input [3:0] botoes,
-    input led_selector,
+    input led_selector,     
     output jogada_correta,
     output enderecoIgualRodada,
     output fimC,

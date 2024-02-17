@@ -21,10 +21,19 @@ module circuito_exp6_tb2;
 
     // Sinais para conectar com o DUT
     // valores iniciais para fins de simulacao (ModelSim)
-    reg        clock_in   = 1;
-    reg        reset_in   = 0;
-    reg        jogar_in = 0;
-    reg  [3:0] botoes_in  = 4'b0000;
+reg clock,
+reg zeraCR,
+reg zeraE,
+reg contaCR,
+reg contaE,
+reg limpaRC,
+reg registraRC,
+reg zeraLeds,
+reg registraLeds,
+reg contaT,
+reg botoes,
+reg led_selector,     
+reg jogada_correta,
 
 
     // Configuração do clock
