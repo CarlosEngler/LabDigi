@@ -5,7 +5,7 @@
  * --------------------------------------------------------------------
  * Descricao : testbench Verilog MODELO para circuito da Experiencia 5 
  *
- *             1) Plano de testes com erro na quarta rodada ultima jogada
+ *             1) Plano de testes com erra na décima sexta rodada 
  *
  * --------------------------------------------------------------------
  * Revisoes  :
@@ -17,7 +17,7 @@
 
 `timescale 1ns/1ns
 
-module circuito_exp6_tb4;
+module circuito_exp6_tb2;
 
     // Sinais para conectar com o DUT
     // valores iniciais para fins de simulacao (ModelSim)
@@ -52,27 +52,33 @@ module circuito_exp6_tb4;
     // Gerador de clock
     always #((clockPeriod / 2)) clock_in = ~clock_in;
 
-    // instanciacao do DUT (Device Under Test)
-    circuito_jogo_base dut (
-      .clock             ( clock_in    ),
-      .reset           (reset_in    ),
-      .jogar           ( jogar_in  ),
-      .botoes          ( botoes_in   ),
-      .leds            ( leds_out    ),
-      .ganhou          ( ganhou_out ),
-      .perdeu          ( perdeu_out   ),
-      .pronto          ( pronto_out      ),
-      .db_contagem     ( db_contagem_out    ),
-      .db_memoria      ( db_memoria_out     ),
-      .db_estado       ( db_estado_out      ),
-      .db_jogadafeita  ( db_jogadafeita_out ),
-      .db_rodada       ( db_rodada_out      ),
-      .db_clock        ( db_clock_out       ),
-      .db_jogada_correta( db_jogada_correta_out     ),    
-      .db_tem_jogada   ( db_tem_jogada_out  ),
-      .db_enderecoIgualRodada ( db_enderecoIgualJogada_out),
-      .db_timeout      ( db_timeout_out     )
-    );
+    // Instancia do DUT
+    exp6_fluxo_dados ffut(
+    .clock      (clock),
+    .botoes     (botoes),
+    .limpaRC         (w_limparRC),
+    .registraRC       (w_registraRC),
+    .zeraLeds       (w_zeraLeds),
+    .registraLeds   (w_registraLeds),
+    .contaCR    (w_contaCR),
+    .zeraCR (w_zeraCR),
+    .contaE (w_contaE),
+    .zeraE  (w_zeraE),
+    .enderecoIgualRodada    (w_enderecoIgualRodada),
+    .jogada_correta (w_jogada_correta),
+    .fimC   ( ),
+    .fimL   (w_fimL),
+	.contaT (w_contaT),
+	.timeout    (s_timeout),
+    .db_contagem    (s_contagem),
+    .db_jogada  (s_botoes),
+    .db_memoria (s_memoria),
+    .db_rodada  (s_rodada),
+    .jogada_feita   (w_jogada_feita),
+    .db_tem_jogada  (db_tem_jogada),
+    .leds   (leds),
+    .led_selector   (w_led_selector)    
+);
 
     integer rodadaInt = 0;
     integer jogadaInt = 0;
@@ -121,9 +127,12 @@ module circuito_exp6_tb4;
             4'b0000: botoes_in = 4'b0001;
             4'b0001: botoes_in = 4'b0010;
             4'b0010: botoes_in = 4'b0100;
-            4'b0011: botoes_in = 4'b0100;
-            
+            4'b0011: botoes_in = 4'b1000;
           endcase
+
+          if(rodadaInt == 4 && jogadaInt == 2) begin
+            botoes_in = 4'b0001;
+          end
 
           #(5*clockPeriod);
           botoes_in = 4'b0000;

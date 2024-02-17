@@ -117,7 +117,7 @@ module circuito_exp6_tb2;
         for(jogadaInt = 0; jogadaInt <= rodadaInt; jogadaInt = jogadaInt + 1) begin
           caso = 3;
 
-          if(rodadaInt == 4 && jogadaInt == 2) begin
+          if(rodadaInt == 3 && jogadaInt == 1) begin
             #(30*100000000*clockPeriod);
           end
 
