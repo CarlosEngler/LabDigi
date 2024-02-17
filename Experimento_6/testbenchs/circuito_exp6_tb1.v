@@ -124,13 +124,11 @@ module circuito_exp6_tb1;
       // espera entre jogadas
       #(10*clockPeriod);
 
-      for(rodadaInt = 0; rodadaInt <= 4'd15; rodadaInt = rodadaInt + 1) begin
+      for(rodadaInt = 0; rodadaInt <= 15; rodadaInt = rodadaInt + 1) begin
         for(jogadaInt = 0; jogadaInt <= rodadaInt; jogadaInt = jogadaInt + 1) begin
           caso = 4;
-          rodada <= rodadaInt;
-          jogada <= jogadaInt;
 
-          case (jogada)
+          case (jogadaInt)
             4'b0000: botoes_in = 4'b0001;
             4'b0001: botoes_in = 4'b0010;
             4'b0010: botoes_in = 4'b0100;
@@ -151,7 +149,7 @@ module circuito_exp6_tb1;
 
           #(5*clockPeriod);
           botoes_in = 4'b0000;
-          #(10*clockPeriod);
+          #(5*clockPeriod);
         end
       end
 
