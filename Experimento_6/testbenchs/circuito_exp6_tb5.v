@@ -133,7 +133,7 @@ module circuito_exp6_tb5;
             4'b1100: botoes_in = 4'b1000;
             4'b1101: botoes_in = 4'b1000;
             4'b1110: botoes_in = 4'b0001;
-            4'b1111: botoes_in = 4'b0100;
+            4'b1111: botoes_in = 4'b0010;
           endcase
 
           #(5*clockPeriod);
