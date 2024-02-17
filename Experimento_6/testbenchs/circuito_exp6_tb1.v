@@ -113,20 +113,10 @@ module circuito_exp6_tb1;
       // espera
       #(10*clockPeriod);
 
-      // rodada 1
-
-      // Teste 3. jogada #1 
-      caso = 3;
-      @(negedge clock_in);
-      botoes_in = 4'b0001;
-      #(10*clockPeriod);
-      botoes_in = 4'b0000;
-      // espera entre jogadas
-      #(10*clockPeriod);
 
       for(rodadaInt = 0; rodadaInt <= 15; rodadaInt = rodadaInt + 1) begin
         for(jogadaInt = 0; jogadaInt <= rodadaInt; jogadaInt = jogadaInt + 1) begin
-          caso = 4;
+          caso = 3;
 
           case (jogadaInt)
             4'b0000: botoes_in = 4'b0001;
