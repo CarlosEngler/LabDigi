@@ -18,7 +18,7 @@
 
 `timescale 1ns/1ns
 
-module circuito_exp6_tb_modelo;
+module circuito_exp6_tb1;
 
     // Sinais para conectar com o DUT
     // valores iniciais para fins de simulacao (ModelSim)
