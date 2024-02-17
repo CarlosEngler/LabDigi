@@ -15,7 +15,7 @@
  * --------------------------------------------------------------------
 */
 
-`timescale 1ns/1ns
+`timescale 1s/1s
 
 module circuito_exp6_tb2;
 
@@ -42,7 +42,7 @@ module circuito_exp6_tb2;
     wire db_timeout_out;
 
     // Configuração do clock
-    parameter clockPeriod = 20; // in ns, f=50MHz
+    parameter clockPeriod = 1; 
 
     // Identificacao do caso de teste
     reg [31:0] caso = 0;
@@ -118,7 +118,7 @@ module circuito_exp6_tb2;
           caso = 3;
 
           if(rodadaInt == 3 && jogadaInt == 1) begin
-            #(30*100000000*clockPeriod);
+            #(6*clockPeriod);
           end
 
           case (jogadaInt)

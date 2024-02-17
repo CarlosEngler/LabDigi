@@ -26,20 +26,6 @@ module circuito_exp6_tb2;
     reg        jogar_in = 0;
     reg  [3:0] botoes_in  = 4'b0000;
 
-    wire [3:0] leds_out;
-    wire ganhou_out;
-    wire perdeu_out;
-    wire pronto_out;
-    wire [6:0] db_contagem_out;
-    wire [6:0] db_memoria_out;
-    wire [6:0] db_estado_out;
-    wire [6:0] db_jogadafeita_out; 
-    wire [6:0] db_rodada_out; 
-    wire db_clock_out;
-    wire db_jogadaCorreta_out;
-    wire db_tem_jogada_out;
-    wire db_enderecoIgualJogada_out;
-    wire db_timeout_out;
 
     // Configuração do clock
     parameter clockPeriod = 20; // in ns, f=50MHz
@@ -68,8 +54,8 @@ module circuito_exp6_tb2;
     .jogada_correta (w_jogada_correta),
     .fimC   ( ),
     .fimL   (w_fimL),
-	.contaT (w_contaT),
-	.timeout    (s_timeout),
+	  .contaT (w_contaT),
+	  .timeout    (s_timeout),
     .db_contagem    (s_contagem),
     .db_jogada  (s_botoes),
     .db_memoria (s_memoria),
