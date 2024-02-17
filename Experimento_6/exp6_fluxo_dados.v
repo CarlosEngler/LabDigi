@@ -71,7 +71,7 @@ module exp6_fluxo_dados (
       .rco  ( fimL )
     );
   
-	 contador_m #( .M(5000), .N(12) ) contador_de_timeout (
+	 contador_m #( .M(5000), .N(13) ) contador_de_timeout (
 		.clock  ( clock ),
 		.zera_as( zeraCR | limpaRC | zeraE),
 		.zera_s ( contaE ),
