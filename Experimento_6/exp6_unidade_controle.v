@@ -21,6 +21,7 @@ module exp6_unidade_controle (
  input jogada_correta,
  input enderecoIgualRodada,
  input timeout,
+ input meio,
  output reg zeraCR,
  output reg contaCR,
  output reg zeraE,
@@ -35,7 +36,9 @@ module exp6_unidade_controle (
  output reg contaT,
  output reg db_timeout,
  output reg [3:0] db_estado,
- output reg led_selector
+ output reg ram_enable,
+ output reg led_selector,
+ output reg mux_leds
 );
 
     // Define estados
@@ -48,10 +51,12 @@ module exp6_unidade_controle (
     parameter proxima_jogada    = 4'b0110;  // 6
     parameter ultima_jogada     = 4'b0111;  // 7
     parameter proxima_rodada    = 4'b1000;  // 8
-	parameter fim_A             = 4'b1010;  // A
+	 parameter write_enable      = 4'b1001;  // 9
+	 parameter fim_A             = 4'b1010;  // A
     parameter atualiza_memoria  = 4'b1011;  // B
-	parameter fim_T             = 4'b1101;  // D
+	 parameter fim_T             = 4'b1101;  // D
     parameter fim_E             = 4'b1110;  // E
+	 parameter timer_wait        = 4'b1100;  // C
 
     // Variaveis de estado
     reg [3:0] Eatual, Eprox;
@@ -68,18 +73,20 @@ module exp6_unidade_controle (
     always @* begin
         case (Eatual)
             idle:               Eprox = jogar ? preparacao : idle;
-            preparacao:         Eprox = inicio;
+            preparacao:         Eprox = timer_wait;
+				timer_wait:         Eprox = meio ? inicio : timer_wait;
             inicio:             Eprox = espera;
             espera:             Eprox = timeout ? fim_T : (jogada ? registra : espera);
             registra:           Eprox = atualiza_memoria;
             atualiza_memoria:   Eprox = comparacao;
             comparacao:         Eprox = !jogada_correta ? fim_E : (enderecoIgualRodada ? ultima_jogada : proxima_jogada);
             proxima_jogada:     Eprox = espera;
-            ultima_jogada:      Eprox = fim ? fim_A : proxima_rodada;
-            proxima_rodada:     Eprox = inicio;
-			fim_T:              Eprox = jogar ? preparacao : fim_T;
+            ultima_jogada:      Eprox = fim ? fim_A : (jogada ? proxima_rodada : ultima_jogada);
+            proxima_rodada:     Eprox = write_enable;
+				write_enable:       Eprox = timer_wait;
+			   fim_T:              Eprox = jogar ? preparacao : fim_T;
             fim_E:              Eprox = jogar ? preparacao : fim_E;
-			fim_A:              Eprox = jogar ? preparacao : fim_A;
+			   fim_A:              Eprox = jogar ? preparacao : fim_A;
             default:            Eprox = idle;
         endcase
     end
@@ -89,17 +96,19 @@ module exp6_unidade_controle (
         zeraCR        = (Eatual == idle || Eatual == preparacao) ? 1'b1 : 1'b0;
         zeraE         = (Eatual == idle || Eatual == preparacao || Eatual == inicio) ? 1'b1 : 1'b0;
         limpaRC       = (Eatual == idle || Eatual == preparacao) ? 1'b1 : 1'b0;
-        registraRC    = (Eatual == registra) ? 1'b1 : 1'b0;
-        zeraLeds      = (Eatual == idle || Eatual == preparacao) ? 1'b1 : 1'b0;
-        registraLeds  = (Eatual == registra || Eatual == inicio) ? 1'b1 : 1'b0;
+        registraRC    = (Eatual == registra || Eatual == proxima_rodada) ? 1'b1 : 1'b0;
+        zeraLeds      = (Eatual == idle) ? 1'b1 : 1'b0;
+        registraLeds  = (Eatual == registra || Eatual == inicio || Eatual == preparacao) ? 1'b1 : 1'b0;
         contaCR       = (Eatual == proxima_rodada) ? 1'b1 : 1'b0;
-        contaE        = (Eatual == proxima_jogada) ? 1'b1 : 1'b0;
+        contaE        = (Eatual == proxima_jogada || Eatual == proxima_rodada) ? 1'b1 : 1'b0;
         pronto        = (Eatual == fim_A || Eatual == fim_E || Eatual == fim_T) ? 1'b1 : 1'b0;
-		db_timeout    = (Eatual == fim_T) ? 1'b1 : 1'b0;
+		  db_timeout    = (Eatual == fim_T) ? 1'b1 : 1'b0;
         ganhou        = (Eatual == fim_A) ? 1'b1 : 1'b0;
         perdeu        = (Eatual == fim_E || Eatual == fim_T) ? 1'b1 : 1'b0;
-		contaT        = (Eatual == espera) ? 1'b1 : 1'b0;
-        led_selector  = (Eatual == inicio || Eatual == preparacao || Eatual == proxima_rodada) ? 1'b1 : 1'b0;
+		  contaT        = (Eatual == espera || Eatual == timer_wait) ? 1'b1 : 1'b0;
+		  ram_enable    = (Eatual == write_enable) ? 1'b1 : 1'b0;
+        led_selector  = (Eatual == inicio || Eatual == proxima_rodada || Eatual == preparacao) ? 1'b1 : 1'b0;
+		  mux_leds      = (Eatual == timer_wait) ? 1'b1 : 1'b0;
 
         // Saida de depuracao (estado)
         case (Eatual)
@@ -112,9 +121,11 @@ module exp6_unidade_controle (
             proxima_jogada:    db_estado = 4'b0110;  // 6
             ultima_jogada:     db_estado = 4'b0111;  // 7
             proxima_rodada:    db_estado = 4'b1000;  // 8
-	        fim_A:             db_estado = 4'b1010;  // A
+				write_enable:      db_estado = 4'b1001;  // 9
+				fim_A:             db_estado = 4'b1010;  // A
             atualiza_memoria:  db_estado = 4'b1011;  // B
-	        fim_T:             db_estado = 4'b1101;  // D
+				timer_wait:        db_estado = 4'b1100;  // C
+				fim_T:             db_estado = 4'b1101;  // D
             fim_E:             db_estado = 4'b1110;  // E
             default:           db_estado = 4'b1111;  // F
         endcase

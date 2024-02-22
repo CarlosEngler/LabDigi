@@ -11,7 +11,7 @@
  * --------------------------------------------------------------------
 */
 
-module circuito_jogo_base (
+module circuito_exp6 (
  input clock,
  input reset,
  input jogar,
@@ -46,7 +46,10 @@ wire w_enderecoIgualRodada;
 wire w_jogada_correta;
 wire s_timeout;
 wire w_contaT;
+wire w_meio;
+wire w_enable_ram;
 wire w_led_selector;
+wire w_mux_leds;
 wire [3:0] s_estado;
 wire [3:0] s_contagem;
 wire [3:0] s_botoes;
@@ -78,7 +81,10 @@ wire [3:0] s_rodada;
     .jogada_feita(w_jogada_feita),
     .db_tem_jogada(db_tem_jogada),
     .leds(leds),
-    .led_selector(w_led_selector)    
+    .led_selector(w_led_selector),
+	 .ram_enable(w_enable_ram),
+	 .meio(w_meio),
+	 .mux_leds(w_mux_leds)
 );
 
 	exp6_unidade_controle UC(
@@ -104,7 +110,10 @@ wire [3:0] s_rodada;
     .ganhou(ganhou),
     .perdeu(perdeu),
 	.contaT(w_contaT),
-    .led_selector(w_led_selector)
+    .led_selector(w_led_selector),
+	 .ram_enable(w_enable_ram),
+	 .meio(w_meio),
+	 .mux_leds(w_mux_leds)
 );
 
 	hexa7seg HEX0(

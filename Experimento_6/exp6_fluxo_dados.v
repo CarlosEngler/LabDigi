@@ -21,9 +21,11 @@ module exp6_fluxo_dados (
     input registraRC,
     input zeraLeds,
     input registraLeds,
-	  input contaT,
+	 input contaT,
     input [3:0] botoes,
-    input led_selector,     
+    input led_selector,
+	 input ram_enable,
+	 input mux_leds,
     output jogada_correta,
     output enderecoIgualRodada,
     output fimC,
@@ -35,7 +37,8 @@ module exp6_fluxo_dados (
     output [3:0] db_memoria,
     output [3:0] db_jogada,
     output [3:0] db_rodada,
-    output [3:0] leds
+    output [3:0] leds,
+	 output meio
 );
     
 	wire [3:0] s_endereco;
@@ -78,7 +81,7 @@ module exp6_fluxo_dados (
 		.conta  ( contaT ),
 		.Q      (  ),
 		.fim    ( timeout ),
-		.meio   (  )
+		.meio   ( meio )
   );
 
     registrador_4 registrador (
@@ -105,12 +108,15 @@ module exp6_fluxo_dados (
     );
 
   assign s_memoria = s_led_selector ? s_rodada : s_endereco;
-
-    sync_rom_16x4 memoria (
-        .clock ( clock ),
-        .address ( s_memoria ),
-        .data_out (s_dado)
-    );
+	 
+	 sync_ram_16x4_file RAM
+(
+			.clk(clock),
+			.we(ram_enable),
+			.data(s_jogada),
+			.addr(s_memoria),
+			.q(s_dado)
+);
 	 
 	 // comparador_85
     comparador_85 comparador_de_jogada (
@@ -135,7 +141,7 @@ module exp6_fluxo_dados (
       .AEBo( enderecoIgualRodada )
     );
 
-assign leds = s_led_selector ? db_memoria : db_jogada;
+assign leds = s_led_selector ? (mux_leds ? db_memoria : 4'b0000) : db_jogada;
 
 assign db_jogada = s_jogada;
 assign db_memoria = s_dado;
