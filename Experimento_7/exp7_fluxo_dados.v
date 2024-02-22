@@ -22,8 +22,10 @@ module exp7_fluxo_dados (
     input zeraLeds,
     input registraLeds,
 	  input contaT,
+    input contaL,
     input [3:0] botoes,
     input led_selector,
+    input led_turn_off,
 	  input ram_enable,
     output jogada_correta,
     output enderecoIgualRodada,
@@ -37,14 +39,15 @@ module exp7_fluxo_dados (
     output [3:0] db_jogada,
     output [3:0] db_rodada,
     output [3:0] leds,
-	  output meio
+	  output leds_meio,
+    output leds_fim
 );
     
 	wire [3:0] s_endereco;
-  wire [3:0] s_memoria;
 	wire [3:0] s_jogada;
 	wire [3:0] s_dado;
   wire [3:0] s_rodada;
+  wire [3:0] s_mux;
   wire s_led_selector;
   wire sinal;
 
@@ -80,7 +83,19 @@ module exp7_fluxo_dados (
 		.conta  ( contaT ),
 		.Q      (  ),
 		.fim    ( timeout ),
-		.meio   ( meio )
+		.meio   ( ),
+    .quarto ()
+  );
+
+  contador_m #( .M(2000), .N(12) ) contador_de_led (
+		.clock  ( clock ),
+		.zera_as( zeraCR | contaE ),
+		.zera_s ( contaT ),
+		.conta  ( contaL ),
+		.Q      (  ),
+		.fim    ( leds_fim ),
+		.meio   ( ),
+    .quarto ( leds_meio )
   );
 
     registrador_4 registrador (
@@ -105,15 +120,13 @@ module exp7_fluxo_dados (
       .sinal(sinal),
       .pulso(jogada_feita)
     );
-
-  assign s_memoria = s_led_selector ? s_rodada : s_endereco;
  
 	 sync_ram_16x4_file RAM
 (
 			.clk(clock),
 			.we(ram_enable),
 			.data(s_jogada),
-			.addr(s_memoria),
+			.addr(s_endereco),
 			.q(s_dado)
 );
 	 
@@ -140,7 +153,19 @@ module exp7_fluxo_dados (
       .AEBo( enderecoIgualRodada )
     );
 
-assign leds = s_led_selector ? db_memoria : db_jogada;
+    mux2x1_n #( .BITS(4) ) mux_leds (
+      .D0(s_mux),
+      .D1(db_memoria),
+      .SEL(s_led_selector),
+      .OUT(leds)
+    );
+
+    mux2x1_n #( .BITS(4) ) mux_zera (
+      .D0(db_jogada),
+      .D1(4'b0000),
+      .SEL(led_turn_off),
+      .OUT(s_mux)
+    );
 
 assign db_jogada = s_jogada;
 assign db_memoria = s_dado;

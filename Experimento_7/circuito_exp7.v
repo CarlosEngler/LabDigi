@@ -15,7 +15,7 @@ module circuito_exp7 (
  input clock,
  input reset,
  input jogar,
- input [3:0] botoes,
+ input  [3:0] botoes,
  output [3:0] leds,
  output ganhou,
  output perdeu,
@@ -33,6 +33,7 @@ module circuito_exp7 (
 );
 
 wire w_fimL;
+wire w_fimLeds;
 wire w_contaE;
 wire w_zeraE;
 wire w_contaCR;
@@ -46,17 +47,18 @@ wire w_enderecoIgualRodada;
 wire w_jogada_correta;
 wire s_timeout;
 wire w_contaT;
+wire w_contaL;
 wire w_meio;
 wire w_enable_ram;
 wire w_led_selector;
-wire [3:0] s_estado;
+wire w_led_turn_off;
+wire [4:0] s_estado;
 wire [3:0] s_contagem;
 wire [3:0] s_botoes;
 wire [3:0] s_memoria;
 wire [3:0] s_rodada;
 
-
-	exp6_fluxo_dados FD(
+	exp7_fluxo_dados FD(
     .clock(clock),
     .botoes(botoes),
     .limpaRC(w_limparRC),
@@ -82,10 +84,13 @@ wire [3:0] s_rodada;
     .leds(leds),
     .led_selector(w_led_selector),
 	.ram_enable(w_enable_ram),
-	.meio(w_meio)
+	.leds_meio(w_meio),
+    .leds_fim(w_fimLeds),
+    .contaL(w_contaL),
+    .led_turn_off(w_led_turn_off)
 );
 
-	exp6_unidade_controle UC(
+	exp7_unidade_controle UC(
     .clock(clock),
     .reset(reset),
     .jogar(jogar),
@@ -110,19 +115,22 @@ wire [3:0] s_rodada;
 	.contaT(w_contaT),
     .led_selector(w_led_selector),
 	.ram_enable(w_enable_ram),
-	.meio(w_meio),
+	.leds_meio(w_meio),
+    .leds_fim(w_fimLeds),
+    .contaL(w_contaL),
+    .led_turn_off(w_led_turn_off)
 );
 
 	hexa7seg HEX0(
-    .hexa(s_contagem), .display(db_contagem)
+    .hexa({1'b0, s_contagem}), .display(db_contagem)
 );
 
 	hexa7seg HEX1(
-    .hexa(s_memoria), .display(db_memoria)
+    .hexa({1'b0, s_memoria}), .display(db_memoria)
 );
 
 	hexa7seg HEX2(
-    .hexa(s_botoes), .display(db_jogadafeita)
+    .hexa({1'b0, s_botoes}), .display(db_jogadafeita)
 );
 
 	hexa7seg HEX5(
@@ -130,7 +138,7 @@ wire [3:0] s_rodada;
 );
 
 hexa7seg HEX3(
-    .hexa(s_rodada), .display(db_rodada)
+    .hexa({1'b0, s_rodada}), .display(db_rodada)
 );
 
 assign db_jogada_correta = w_jogada_correta;

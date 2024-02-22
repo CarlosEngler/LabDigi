@@ -60,8 +60,7 @@ module exp7_unidade_controle (
 	parameter fim_T               = 5'b01101;  // D
     parameter fim_E               = 5'b01110;  // E
     parameter timer_wait_play     = 5'b01111;  // F
-    parameter timer_wait_last     = 5'b10001;  // H
-    parameter timer_wait_lose     = 5'b10000;  // G
+    parameter timer_wait_last     = 5'b10000;  // G
 
     // Variaveis de estado
     reg [4:0] Eatual, Eprox;
@@ -85,9 +84,8 @@ module exp7_unidade_controle (
             espera:             Eprox = timeout ? fim_T : (jogada ? registra : espera);
             registra:           Eprox = atualiza_memoria;
             atualiza_memoria:   Eprox = comparacao;
-            comparacao:         Eprox = !jogada_correta ? timer_wait_lose : (enderecoIgualRodada ? timer_wait_last : proxima_jogada);
-            timer_wait_last:    Eprox = leds_meio ? ultima_jogada : timer_wait_last;
-            timer_wait_lose:    Eprox = leds_meio ? fim_E : timer_wait_lose;
+            comparacao:         Eprox = !jogada_correta ? fim_E : (enderecoIgualRodada ? timer_wait_last : proxima_jogada);
+            timer_wait_last:    Eprox = timer_wait_last;
             proxima_jogada:     Eprox = timer_wait_play;
             ultima_jogada:      Eprox = fim ? fim_A : (jogada ? proxima_rodada : ultima_jogada);
             proxima_rodada:     Eprox = write_enable;
@@ -114,10 +112,10 @@ module exp7_unidade_controle (
         ganhou        = (Eatual == fim_A) ? 1'b1 : 1'b0;
         perdeu        = (Eatual == fim_E || Eatual == fim_T) ? 1'b1 : 1'b0;
 		contaT        = (Eatual == espera) ? 1'b1 : 1'b0;
-        contaL        = (Eatual == timer_wait_last || Eatual == timer_wait_play || Eatual == timer_wait_2s || Eatual == timer_wait_lose) ? 1'b1 : 1'b0;
+        contaL        = (Eatual == timer_wait_last || Eatual == timer_wait_play || || Eatual == timer_wait_2s) ? 1'b1 : 1'b0;
 		ram_enable    = (Eatual == write_enable) ? 1'b1 : 1'b0;
         led_selector  = (Eatual == inicia_rodada || Eatual == proxima_rodada || Eatual == preparacao || Eatual == idle) ? 1'b1 : 1'b0;
-        led_turn_off  = (Eatual == espera || Eatual == ultima_jogada || Eatual == fim_A || Eatual == fim_E) ? 1'b1 : 1'b0;
+        led_turn_off  = (Eatual == espera) ? 1'b1 : 1'b0;
 
         // Saida de depuracao (estado)
         case (Eatual)
@@ -137,8 +135,7 @@ module exp7_unidade_controle (
             fim_T:             db_estado = 5'b01101;  // D
             fim_E:             db_estado = 5'b01110;  // E
             timer_wait_play:   db_estado = 5'b01111;  // F
-            timer_wait_lose:   db_estado = 5'b10000;  // G
-            timer_wait_last:   db_estado = 5'b10001;  // H
+            timer_wait_last:   db_estado = 5'b10000;  // G
             default:           db_estado = 5'b00000;  // 0
         endcase
     end

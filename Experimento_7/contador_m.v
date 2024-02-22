@@ -24,7 +24,8 @@ module contador_m #(parameter M=100, N=7)
    input  wire          conta,
    output reg  [N-1:0]  Q,
    output reg           fim,
-   output reg           meio
+   output reg           meio,
+   output reg           quarto
   );
 
   always @(posedge clock or posedge zera_as) begin
@@ -51,5 +52,9 @@ module contador_m #(parameter M=100, N=7)
   always @ (Q)
       if (Q == M/2-1) meio = 1;
       else            meio = 0;
+
+  always @ (Q)
+      if (Q == M/4-1) quarto = 1;
+      else            quarto = 0;
 
 endmodule

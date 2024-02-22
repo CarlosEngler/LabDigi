@@ -21,7 +21,7 @@
  */
 
 module hexa7seg (hexa, display);
-    input      [3:0] hexa;
+    input      [4:0] hexa;
     output reg [6:0] display;
 
     /*
@@ -39,51 +39,26 @@ module hexa7seg (hexa, display);
         
     always @(hexa)
     case (hexa)
-        4'h0:    display = 7'b1000000;
-        4'h1:    display = 7'b1111001;
-        4'h2:    display = 7'b0100100;
-        4'h3:    display = 7'b0110000;
-        4'h4:    display = 7'b0011001;
-        4'h5:    display = 7'b0010010;
-        4'h6:    display = 7'b0000010;
-        4'h7:    display = 7'b1111000;
-        4'h8:    display = 7'b0000000;
-        4'h9:    display = 7'b0010000;
-        4'ha:    display = 7'b0001000;
-        4'hb:    display = 7'b0000011;
-        4'hc:    display = 7'b1000110;
-        4'hd:    display = 7'b0100001;
-        4'he:    display = 7'b0000110;
-        4'hf:    display = 7'b0001110;
+        5'h0: display = 7'b1000000;
+        5'h1: display = 7'b1111001;
+        5'h2: display = 7'b0100100;
+        5'h3: display = 7'b0110000;
+        5'h4: display = 7'b0011001;
+        5'h5: display = 7'b0010010;
+        5'h6: display = 7'b0000010;
+        5'h7: display = 7'b1111000;
+        5'h8: display = 7'b0000000;
+        5'h9: display = 7'b0010000;
+        5'ha: display = 7'b0001000;
+        5'hb: display = 7'b0000011;
+        5'hc: display = 7'b1000110;
+        5'hd: display = 7'b0100001;
+        5'he: display = 7'b0000110;
+        5'hf: display = 7'b0001110;
+        5'b10000: display  = 7'b0000010; // Para 'g'
+        5'b10001: display  = 7'b0001011; // Para 'h'
+        5'b10011: display  = 7'b0110000; // Para 'i'
         default: display = 7'b1111111;
     endcase
 endmodule
-
-    /*
-always @ (hexa) begin
-    case (hexa)
-        5'b00000: display = 7'b1000000;
-        5'b00001: display = 7'b1111001;
-        5'b00010: display = 7'b0100100;
-        5'b00011: display = 7'b0110000;
-        5'b00100: display = 7'b0011001;
-        5'b00101: display = 7'b0010010;
-        5'b00110: display = 7'b0000010;
-        5'b00111: display = 7'b1111000;
-        5'b01000: display = 7'b0000000;
-        5'b01001: display = 7'b0010000;
-        5'b01010: display = 7'b0001000;
-        5'b01011: display = 7'b0000011;
-        5'b01100: display = 7'b1000110;
-        5'b01101: display = 7'b0100001;
-        5'b01110: display = 7'b0000110;
-        5'b01111: display = 7'b0001110;
-        5'b10000: display = 7'b0000000; // Para 'g'
-        5'b10001: display = 7'b0001000; // Para 'h'
-        5'b10010: display = 7'b0110000; // Para 'i'
-        5'b10011: display = 7'b0111000; // Para 'j'
-        default: display = 7'b1111111;
-    endcase
-end
- */
 
