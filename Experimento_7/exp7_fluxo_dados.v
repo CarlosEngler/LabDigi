@@ -39,8 +39,8 @@ module exp7_fluxo_dados (
     output [3:0] db_jogada,
     output [3:0] db_rodada,
     output [3:0] leds,
-	  output leds_meio,
-    output leds_fim
+	  output halfsec_reach,
+    output 2sec_reach
 );
     
 	wire [3:0] s_endereco;
@@ -93,9 +93,9 @@ module exp7_fluxo_dados (
 		.zera_s ( contaT ),
 		.conta  ( contaL ),
 		.Q      (  ),
-		.fim    ( leds_fim ),
+		.fim    ( 2sec_reach ),
 		.meio   ( ),
-    .quarto ( leds_meio )
+    .quarto ( halfsec_reach )
   );
 
     registrador_4 registrador (

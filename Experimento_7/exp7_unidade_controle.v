@@ -21,8 +21,8 @@ module exp7_unidade_controle (
  input jogada_correta,
  input enderecoIgualRodada,
  input timeout,
- input leds_fim,
- inout leds_meio,
+ input 2sec_reach,
+ input halfsec_reach,
  output reg zeraCR,
  output reg contaCR,
  output reg zeraE,
@@ -56,12 +56,12 @@ module exp7_unidade_controle (
 	parameter write_enable        = 5'b01001;  // 9
 	parameter fim_A               = 5'b01010;  // A
     parameter atualiza_memoria    = 5'b01011;  // B
-    parameter timer_wait_2s       = 5'b01100;  // C
+    parameter show_first_play       = 5'b01100;  // C
 	parameter fim_T               = 5'b01101;  // D
     parameter fim_E               = 5'b01110;  // E
-    parameter timer_wait_play     = 5'b01111;  // F
-    parameter timer_wait_last     = 5'b10001;  // H
-    parameter timer_wait_lose     = 5'b10000;  // G
+    parameter show_last_play     = 5'b01111;  // F
+    parameter show_correct_play     = 5'b10001;  // H
+    parameter show_wrong_play     = 5'b10000;  // G
 
     // Variaveis de estado
     reg [4:0] Eatual, Eprox;
@@ -78,17 +78,17 @@ module exp7_unidade_controle (
     always @* begin
         case (Eatual)
             idle:               Eprox = jogar ? preparacao : idle;
-            preparacao:         Eprox = timer_wait_2s;
-			timer_wait_2s:      Eprox = leds_fim ? espera : timer_wait_2s;
-            inicia_rodada:      Eprox = timer_wait_play;
-            timer_wait_play:    Eprox = leds_meio ? espera : timer_wait_play;
+            preparacao:         Eprox = show_first_play;
+			show_first_play:      Eprox = 2sec_reach ? espera : show_first_play;
+            inicia_rodada:      Eprox = show_last_play;
+            show_last_play:    Eprox = halfsec_reach ? espera : show_last_play;
             espera:             Eprox = timeout ? fim_T : (jogada ? registra : espera);
             registra:           Eprox = atualiza_memoria;
             atualiza_memoria:   Eprox = comparacao;
-            comparacao:         Eprox = !jogada_correta ? timer_wait_lose : (enderecoIgualRodada ? timer_wait_last : proxima_jogada);
-            timer_wait_last:    Eprox = leds_meio ? ultima_jogada : timer_wait_last;
-            timer_wait_lose:    Eprox = leds_meio ? fim_E : timer_wait_lose;
-            proxima_jogada:     Eprox = timer_wait_play;
+            comparacao:         Eprox = !jogada_correta ? show_wrong_play : (enderecoIgualRodada ? show_correct_play : proxima_jogada);
+            show_correct_play:    Eprox = halfsec_reach ? ultima_jogada : show_correct_play;
+            show_wrong_play:    Eprox = halfsec_reach ? fim_E : show_wrong_play;
+            proxima_jogada:     Eprox = show_last_play;
             ultima_jogada:      Eprox = fim ? fim_A : (jogada ? proxima_rodada : ultima_jogada);
             proxima_rodada:     Eprox = write_enable;
 			write_enable:       Eprox = inicia_rodada;
@@ -114,7 +114,7 @@ module exp7_unidade_controle (
         ganhou        = (Eatual == fim_A) ? 1'b1 : 1'b0;
         perdeu        = (Eatual == fim_E || Eatual == fim_T) ? 1'b1 : 1'b0;
 		contaT        = (Eatual == espera) ? 1'b1 : 1'b0;
-        contaL        = (Eatual == timer_wait_last || Eatual == timer_wait_play || Eatual == timer_wait_2s || Eatual == timer_wait_lose) ? 1'b1 : 1'b0;
+        contaL        = (Eatual == show_correct_play || Eatual == show_last_play || Eatual == show_first_play || Eatual == show_wrong_play) ? 1'b1 : 1'b0;
 		ram_enable    = (Eatual == write_enable) ? 1'b1 : 1'b0;
         led_selector  = (Eatual == inicia_rodada || Eatual == proxima_rodada || Eatual == preparacao || Eatual == idle) ? 1'b1 : 1'b0;
         led_turn_off  = (Eatual == espera || Eatual == ultima_jogada || Eatual == fim_A || Eatual == fim_E) ? 1'b1 : 1'b0;
@@ -133,12 +133,12 @@ module exp7_unidade_controle (
             write_enable:      db_estado = 5'b01001;  // 9
             fim_A:             db_estado = 5'b01010;  // A
             atualiza_memoria:  db_estado = 5'b01011;  // B
-            timer_wait_2s:     db_estado = 5'b01100;  // C
+            show_first_play:     db_estado = 5'b01100;  // C
             fim_T:             db_estado = 5'b01101;  // D
             fim_E:             db_estado = 5'b01110;  // E
-            timer_wait_play:   db_estado = 5'b01111;  // F
-            timer_wait_lose:   db_estado = 5'b10000;  // G
-            timer_wait_last:   db_estado = 5'b10001;  // H
+            show_last_play:   db_estado = 5'b01111;  // F
+            show_wrong_play:   db_estado = 5'b10000;  // G
+            show_correct_play:   db_estado = 5'b10001;  // H
             default:           db_estado = 5'b00000;  // 0
         endcase
     end
