@@ -5,7 +5,7 @@
  * --------------------------------------------------------------------
  * Descricao : testbench Verilog MODELO para circuito da Experiencia 5 
  *
- *             1) Plano de testes com erro na quarta rodada ultima jogada
+ *             1) Plano de testes com erra na terceria rodada jogada 1
  *
  * --------------------------------------------------------------------
  * Revisoes  :
@@ -17,7 +17,7 @@
 
 `timescale 1ns/1ns
 
-module circuito_exp6_tb4;
+module circuito_exp7_tb3;
 
     // Sinais para conectar com o DUT
     // valores iniciais para fins de simulacao (ModelSim)
@@ -53,7 +53,7 @@ module circuito_exp6_tb4;
     always #((clockPeriod / 2)) clock_in = ~clock_in;
 
     // instanciacao do DUT (Device Under Test)
-    circuito_jogo_base dut (
+    circuito_exp7 dut (
       .clock             ( clock_in    ),
       .reset           (reset_in    ),
       .jogar           ( jogar_in  ),
@@ -110,10 +110,10 @@ module circuito_exp6_tb4;
       #(5*clockPeriod);
       jogar_in = 0;
       // espera
-      #(10*clockPeriod);
+      #(2010*clockPeriod);
 
 
-      for(rodadaInt = 0; rodadaInt <= 15; rodadaInt = rodadaInt + 1) begin
+      for(rodadaInt = 1; rodadaInt <= 3; rodadaInt = rodadaInt + 1) begin
         for(jogadaInt = 0; jogadaInt <= rodadaInt; jogadaInt = jogadaInt + 1) begin
           caso = 3;
 
@@ -121,13 +121,16 @@ module circuito_exp6_tb4;
             4'b0000: botoes_in = 4'b0001;
             4'b0001: botoes_in = 4'b0010;
             4'b0010: botoes_in = 4'b0100;
-            4'b0011: botoes_in = 4'b0100;
-            
+            4'b0011: botoes_in = 4'b1000;
           endcase
+
+          if(rodadaInt == 3 && jogadaInt == 1) begin
+            botoes_in = 4'b0001;
+          end
 
           #(5*clockPeriod);
           botoes_in = 4'b0000;
-          #(5*clockPeriod);
+          #(510*clockPeriod);
         end
       end
 

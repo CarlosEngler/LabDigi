@@ -21,7 +21,7 @@ module exp7_unidade_controle (
  input jogada_correta,
  input enderecoIgualRodada,
  input timeout,
- input 2sec_reach,
+ input twosec_reach,
  input halfsec_reach,
  output reg zeraCR,
  output reg contaCR,
@@ -79,14 +79,14 @@ module exp7_unidade_controle (
         case (Eatual)
             idle:               Eprox = jogar ? preparacao : idle;
             preparacao:         Eprox = show_first_play;
-			show_first_play:      Eprox = 2sec_reach ? espera : show_first_play;
+			show_first_play:    Eprox = twosec_reach ? espera : show_first_play;
             inicia_rodada:      Eprox = show_last_play;
-            show_last_play:    Eprox = halfsec_reach ? espera : show_last_play;
+            show_last_play:     Eprox = halfsec_reach ? espera : show_last_play;
             espera:             Eprox = timeout ? fim_T : (jogada ? registra : espera);
             registra:           Eprox = atualiza_memoria;
             atualiza_memoria:   Eprox = comparacao;
             comparacao:         Eprox = !jogada_correta ? show_wrong_play : (enderecoIgualRodada ? show_correct_play : proxima_jogada);
-            show_correct_play:    Eprox = halfsec_reach ? ultima_jogada : show_correct_play;
+            show_correct_play:  Eprox = halfsec_reach ? ultima_jogada : show_correct_play;
             show_wrong_play:    Eprox = halfsec_reach ? fim_E : show_wrong_play;
             proxima_jogada:     Eprox = show_last_play;
             ultima_jogada:      Eprox = fim ? fim_A : (jogada ? proxima_rodada : ultima_jogada);

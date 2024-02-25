@@ -5,7 +5,7 @@
  * --------------------------------------------------------------------
  * Descricao : testbench Verilog MODELO para circuito da Experiencia 5 
  *
- *             1) Plano de testes com timeout na quarta rodada jogada 2
+ *             1) Plano de testes com timeout na terceira rodada jogada 2
  *
  * --------------------------------------------------------------------
  * Revisoes  :
@@ -17,7 +17,7 @@
 
 `timescale 1ms/1ms
 
-module circuito_exp6_tb2;
+module circuito_exp7_tb2;
 
     // Sinais para conectar com o DUT
     // valores iniciais para fins de simulacao (ModelSim)
@@ -53,7 +53,7 @@ module circuito_exp6_tb2;
     always #((clockPeriod / 2)) clock_in = ~clock_in;
 
     // instanciacao do DUT (Device Under Test)
-    circuito_jogo_base dut (
+    circuito_exp7 dut (
       .clock             ( clock_in    ),
       .reset           (reset_in    ),
       .jogar           ( jogar_in  ),
@@ -110,10 +110,10 @@ module circuito_exp6_tb2;
       #(5*clockPeriod);
       jogar_in = 0;
       // espera
-      #(10*clockPeriod);
+      #(2010*clockPeriod);
 
 
-      for(rodadaInt = 0; rodadaInt <= 15; rodadaInt = rodadaInt + 1) begin
+      for(rodadaInt = 1; rodadaInt <= 3; rodadaInt = rodadaInt + 1) begin
         for(jogadaInt = 0; jogadaInt <= rodadaInt; jogadaInt = jogadaInt + 1) begin
           caso = 3;
 
@@ -130,7 +130,7 @@ module circuito_exp6_tb2;
 
           #(5*clockPeriod);
           botoes_in = 4'b0000;
-          #(5*clockPeriod);
+          #(510*clockPeriod);
         end
       end
 

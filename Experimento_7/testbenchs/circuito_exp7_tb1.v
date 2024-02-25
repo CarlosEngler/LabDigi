@@ -5,7 +5,7 @@
  * --------------------------------------------------------------------
  * Descricao : testbench Verilog MODELO para circuito da Experiencia 5 
  *
- *             1) Plano de testes com erra na quarta rodada jogada 2
+ *             1) Plano de teste com acertos
  *
  * --------------------------------------------------------------------
  * Revisoes  :
@@ -17,7 +17,7 @@
 
 `timescale 1ns/1ns
 
-module circuito_exp6_tb3;
+module circuito_exp7_tb1;
 
     // Sinais para conectar com o DUT
     // valores iniciais para fins de simulacao (ModelSim)
@@ -53,7 +53,7 @@ module circuito_exp6_tb3;
     always #((clockPeriod / 2)) clock_in = ~clock_in;
 
     // instanciacao do DUT (Device Under Test)
-    circuito_jogo_base dut (
+    circuito_exp7 dut (
       .clock             ( clock_in    ),
       .reset           (reset_in    ),
       .jogar           ( jogar_in  ),
@@ -76,6 +76,7 @@ module circuito_exp6_tb3;
 
     integer rodadaInt = 0;
     integer jogadaInt = 0;
+    integer jogadaFinal = 0;
 
     // geracao dos sinais de entrada (estimulos)
     initial begin
@@ -109,11 +110,11 @@ module circuito_exp6_tb3;
       jogar_in = 1;
       #(5*clockPeriod);
       jogar_in = 0;
-      // espera
-      #(10*clockPeriod);
+      // espera + timer
+      #(2010*clockPeriod);
 
 
-      for(rodadaInt = 0; rodadaInt <= 15; rodadaInt = rodadaInt + 1) begin
+      for(rodadaInt = 1; rodadaInt <= 15; rodadaInt = rodadaInt + 1) begin
         for(jogadaInt = 0; jogadaInt <= rodadaInt; jogadaInt = jogadaInt + 1) begin
           caso = 3;
 
@@ -133,21 +134,46 @@ module circuito_exp6_tb3;
             4'b1100: botoes_in = 4'b1000;
             4'b1101: botoes_in = 4'b1000;
             4'b1110: botoes_in = 4'b0001;
-            4'b1111: botoes_in = 4'b0010;
+            4'b1111: botoes_in = 4'b0100;
           endcase
 
-          if(rodadaInt == 3 && jogadaInt == 1) begin
-            botoes_in = 4'b0001;
-          end
-
-          #(5*clockPeriod);
+          #(5*clockPeriod); // Timer 1
           botoes_in = 4'b0000;
-          #(5*clockPeriod);
+          #(510*clockPeriod); // Timer 2
         end
       end
 
+      caso = 4; // Ultima Jogada
+      #(10*clockPeriod); // Timer 1
+
+      for(jogadaFinal = 0; jogadaFinal <= 15; jogadaFinal = jogadaFinal + 1) begin
+        caso = 5;
+          case (jogadaFinal)
+            4'b0000: botoes_in = 4'b0001;
+            4'b0001: botoes_in = 4'b0010;
+            4'b0010: botoes_in = 4'b0100;
+            4'b0011: botoes_in = 4'b1000;
+            4'b0100: botoes_in = 4'b0100;
+            4'b0101: botoes_in = 4'b0010;
+            4'b0110: botoes_in = 4'b0001;
+            4'b0111: botoes_in = 4'b0001;
+            4'b1000: botoes_in = 4'b0010;
+            4'b1001: botoes_in = 4'b0010;
+            4'b1010: botoes_in = 4'b0100;
+            4'b1011: botoes_in = 4'b0100;
+            4'b1100: botoes_in = 4'b1000;
+            4'b1101: botoes_in = 4'b1000;
+            4'b1110: botoes_in = 4'b0001;
+            4'b1111: botoes_in = 4'b0100;
+          endcase
+
+          #(5*clockPeriod); // Timer 1
+          botoes_in = 4'b0000;
+          #(510*clockPeriod); // Timer 2
+      end
+
       // Incia o jogo novamente
-      caso = 5;
+      caso = 6;
       @(negedge clock_in);
       jogar_in = 4'b0001;
       #(10*clockPeriod);

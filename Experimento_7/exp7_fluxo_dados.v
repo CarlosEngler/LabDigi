@@ -40,7 +40,7 @@ module exp7_fluxo_dados (
     output [3:0] db_rodada,
     output [3:0] leds,
 	  output halfsec_reach,
-    output 2sec_reach
+    output twosec_reach
 );
     
 	wire [3:0] s_endereco;
@@ -93,7 +93,7 @@ module exp7_fluxo_dados (
 		.zera_s ( contaT ),
 		.conta  ( contaL ),
 		.Q      (  ),
-		.fim    ( 2sec_reach ),
+		.fim    ( twosec_reach ),
 		.meio   ( ),
     .quarto ( halfsec_reach )
   );
@@ -121,7 +121,9 @@ module exp7_fluxo_dados (
       .pulso(jogada_feita)
     );
  
-	 sync_ram_16x4_file RAM
+	 sync_ram_16x4_file #(
+        .BINFILE("ram_init.txt")
+    ) RAM
 (
 			.clk(clock),
 			.we(ram_enable),

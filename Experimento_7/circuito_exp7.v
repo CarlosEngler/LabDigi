@@ -85,7 +85,7 @@ wire [3:0] s_rodada;
     .led_selector(w_led_selector),
 	.ram_enable(w_enable_ram),
 	.halfsec_reach(w_meio),
-    .2sec_reach(w_fimLeds),
+    .twosec_reach(w_fimLeds),
     .contaL(w_contaL),
     .led_turn_off(w_led_turn_off)
 );
@@ -116,7 +116,7 @@ wire [3:0] s_rodada;
     .led_selector(w_led_selector),
 	.ram_enable(w_enable_ram),
 	.halfsec_reach(w_meio),
-    .2sec_reach(w_fimLeds),
+    .twosec_reach(w_fimLeds),
     .contaL(w_contaL),
     .led_turn_off(w_led_turn_off)
 );

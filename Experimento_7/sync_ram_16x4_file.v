@@ -16,7 +16,9 @@
 //------------------------------------------------------------------
 //
 
-module sync_ram_16x4_file
+module sync_ram_16x4_file #(
+    parameter BINFILE = "ram_init.txt"
+)
 (
     input        clk,
     input        we,
@@ -36,8 +38,8 @@ module sync_ram_16x4_file
     initial 
     begin : INICIA_RAM
         // leitura do conteudo a partir de um arquivo
-        // $readmemb(BINFILE, ram);
-		  ram[0] = 4'b0001;
+        ram[0] = 4'b0001;
+        $readmemb(BINFILE, ram);
     end 
 
     always @ (posedge clk)
