@@ -85,8 +85,8 @@ module SGA_UC (
 
     // Logica de saida (maquina Moore)
     always @* begin
-        load_size      = (Ecurrent == IDLE ||Ecurrent == PREPARA) ? 1'b1 : 1'b0;
-        clear_size     = (Ecurrent == IDLE || Ecurrent == PREPARA) ? 1'b1 : 1'b0;
+        load_size      = (Ecurrent == IDLE || Ecurrent == PREPARA) ? 1'b1 : 1'b0;
+        clear_size     = (Ecurrent == IDLE) ? 1'b1 : 1'b0;
         count_size     = (Ecurrent == RENDERIZA) ? 1'b1 : 1'b0;
         render_clr     = (Ecurrent == IDLE) ? 1'b1 : 1'b0;
         render_count   = (Ecurrent == PROXIMO_RENDER) ? 1'b1 : 1'b0;
