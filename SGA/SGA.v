@@ -34,10 +34,6 @@ wire w_render_finish;
 wire w_register_apple;
 wire w_reset_apple;
 
-wire w_fimC;
-wire w_contaC;
-wire w_zeraC;
-wire w_registraR;
 wire [3:0] s_estado;
 wire [3:0] s_contagem;
 wire [3:0] s_chaves;
@@ -55,7 +51,6 @@ wire [3:0] s_memoria;
         .register_apple(w_register_apple),
         .reset_apple(w_reset_apple),
         .db_tamanho(db_size),
-        .render_finish(render_finish),
         .db_macas_comidas( ),
         .db_leds(db_leds),
         .db_memoria( )

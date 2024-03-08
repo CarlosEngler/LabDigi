@@ -32,7 +32,6 @@ module SGA_FD (
 	  wire [3:0] s_size;
     wire [3:0] s_render_count;
 	  wire [3:0] s_position;
-    wire [3:0] s_position;
     wire [3:0] s_apple;
 
     // contador_163
