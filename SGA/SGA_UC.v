@@ -23,6 +23,7 @@ module SGA_UC (
     output reg clear_size,
     output reg count_size,
     output reg render_clr,
+    output reg render_count,
     output reg register_apple,
     output reg reset_apple,
     output reg finished,
@@ -86,6 +87,7 @@ module SGA_UC (
         clear_size     = (Ecurrent == IDLE || Ecurrent == PREPARA) ? 1'b1 : 1'b0;
         count_size     = (Ecurrent == RENDERIZA) ? 1'b1 : 1'b0;
         render_clr     = (Ecurrent == IDLE) ? 1'b1 : 1'b0;
+        render_count   = (Ecurrent == PROXIMO_RENDER) ? 1'b1 : 1'b0;
         register_apple = (Ecurrent == GERA_MACA || Ecurrent == GERA_MACA_INICIAL) ? 1'b1 : 1'b0;
         reset_apple    = (Ecurrent == COMEU_MACA);
         finished       = (Ecurrent == GANHOU || Ecurrent == PERDEU) ? 1'b1 : 1'b0;

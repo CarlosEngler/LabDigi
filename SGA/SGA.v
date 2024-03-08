@@ -22,7 +22,7 @@ module SGA (
  output         finished,
  output         won,
  output         lost, 
- output         [6:0] db_state,
+ output         [3:0] db_state,
  output         [35:0] db_leds
  );
 
@@ -34,7 +34,6 @@ wire w_render_finish;
 wire w_register_apple;
 wire w_reset_apple;
 
-wire [3:0] s_estado;
 wire [3:0] s_contagem;
 wire [3:0] s_chaves;
 wire [3:0] s_memoria;
@@ -75,11 +74,7 @@ wire [3:0] s_memoria;
         .finished(finished),
         .won(won),
         .lost(lost), 
-        .db_state(s_estado)
+        .db_state(db_state)
     );
-
-	hexa7seg HEX5(
-    .hexa({1'b0, s_estado}), .display(db_state)
-);
 
 endmodule
