@@ -62,7 +62,7 @@ module SGA_FD (
       .clk(clock),
       .reset(restart),
       .lfsr_output(w_new_apple)
-    )
+    );
 
     registrador_4 apple_position (
         .clock ( clock ),
