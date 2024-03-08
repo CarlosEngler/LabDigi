@@ -36,7 +36,7 @@ output reg [35:0] leds
             4'b1111: leds[28] = 1'b1;
         endcase
 
-        case (position)
+        case (apple)
             4'b0000: leds[7] = 1'b1;
             4'b0001: leds[8] = 1'b1;
             4'b0010: leds[9] = 1'b1;

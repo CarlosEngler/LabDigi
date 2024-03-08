@@ -71,9 +71,9 @@ module SGA_UC (
             IDLE:                   Enext = start ? PREPARA : IDLE;
             PREPARA:                Enext = GERA_MACA_INICIAL;
             GERA_MACA_INICIAL:      Enext = RENDERIZA;
-            RENDERIZA:              Enext = render_finish ? ESPERA : ATUALIZA_MEMORIA;
-            ATUALIZA_MEMORIA:       Enext = PROXIMO_RENDER;
-            PROXIMO_RENDER:         Enext = RENDERIZA;
+            RENDERIZA:              Enext = render_finish ? ESPERA : PROXIMO_RENDER;
+            PROXIMO_RENDER:         Enext = ATUALIZA_MEMORIA;
+            ATUALIZA_MEMORIA:       Enext = RENDERIZA;
             ESPERA:                 Enext = end_play_time ? REGISTRA : ESPERA;
             REGISTRA:               Enext = MOVE;
             MOVE:                   Enext = COMPARA;
