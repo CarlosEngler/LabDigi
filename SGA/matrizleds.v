@@ -11,8 +11,7 @@ output reg [35:0] leds
         leds[12:11] = 2'b11;
         leds[18:17] = 2'b11;
         leds[24:23] = 2'b11;
-        leds[30:29] = 2'b11;
-        leds[35] = 1'b1;  
+        leds[35:29] = 7'b1111111;
     end
 
     always @ (posedge clock)
