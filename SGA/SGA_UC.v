@@ -43,6 +43,7 @@ module SGA_UC (
     parameter COMEU_MACA        = 4'b1000;  // 8
     parameter CRESCE            = 4'b1001;  // 9
     parameter GERA_MACA         = 4'b1010;  // A
+    parameter PAUSOU            = 4'b1011;  // B
     parameter FEZ_NADA          = 4'b1100;  // C
     parameter PERDEU            = 4'b1101;  // D
     parameter GANHOU            = 4'b1110;  // E
@@ -55,6 +56,8 @@ module SGA_UC (
     always @(posedge clock or posedge restart) begin
         if (restart)
             Ecurrent <= IDLE;
+        elsif (pause)
+            Ecurrent <= PAUSOU;
         else
             Ecurrent <= Enext;
     end
@@ -71,6 +74,7 @@ module SGA_UC (
             REGISTRA:               Enext = MOVE;
             MOVE:                   Enext = COMPARA;
             COMPARA:                Enext = is_at_apple ? GANHOU : FEZ_NADA;
+            PAUSOU:                 Enext = start ? ESPERA : PAUSOU;
             FEZ_NADA:               Enext = RENDERIZA;
             GANHOU:                 Enext = start ? PREPARA : GANHOU;
             default:                Enext = IDLE;
@@ -101,6 +105,7 @@ module SGA_UC (
             COMEU_MACA        : db_state = 4'b1000;  // 8
             CRESCE            : db_state = 4'b1001;  // 9
             GERA_MACA         : db_state = 4'b1010;  // A
+            PAUSOU            : db_state = 4'b1011;  // B
             FEZ_NADA          : db_state = 4'b1100;  // C
             PERDEU            : db_state = 4'b1101;  // D
             GANHOU            : db_state = 4'b1110;  // E

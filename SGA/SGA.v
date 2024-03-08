@@ -18,13 +18,13 @@ module SGA (
  input          start,
  input          restart,
  input          pause,
- output         [3:0] db_size;
+ output         [3:0] db_size,
  output         finished,
  output         won,
  output         lost, 
- output         [6:0] db_state
- output         [35:0] db_leds;
-);
+ output         [6:0] db_state,
+ output         [35:0] db_leds
+ );
 
 wire w_clr_size;
 wire w_count_size;
