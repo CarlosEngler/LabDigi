@@ -72,9 +72,9 @@ module simple_render_tb;
       caso = 1;
       // gera pulso de reset
       @(negedge clock_in);
-      reset_in = 1;
+      restart_in = 1;
       #(clockPeriod);
-      reset_in = 0;
+      restart_in = 0;
 
       // Teste 2 (iniciar=0 por 5 periodos de clock)
       caso = 2;

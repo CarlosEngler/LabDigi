@@ -47,7 +47,7 @@ module SGA_FD (
       .rco  (  )
     );
 
-    contador_163 render_count_component (
+    contador_163 render_component (
       .clock( clock ),
       .clr  ( ~render_clr ), 
       .ld   ( 1'b1 ),
@@ -86,8 +86,8 @@ module SGA_FD (
 
     matrizleds game_interface (
         .clock( clock ),
-        .apple()
-        .position ( s_position )
+        .apple(),
+        .position ( s_position ),
         .leds( db_leds )
     );
 
