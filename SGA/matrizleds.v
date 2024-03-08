@@ -14,7 +14,7 @@ output reg [35:0] leds
         leds[35:29] = 7'b1111111;
     end
 
-    always @ (posedge clock)
+    always @ (clock)
 
     begin
         case (position)

@@ -33,6 +33,7 @@ module SGA_FD (
     wire [3:0] s_render_count;
 	  wire [3:0] s_position;
     wire [3:0] s_apple;
+    wire [3:0] w_new_apple;
 
     // contador_163
     contador_163 snake_size (
@@ -57,11 +58,17 @@ module SGA_FD (
       .rco  (  )
     );
 
+    LFSR new_apple(
+      .clk(clock),
+      .reset(restart),
+      .lfsr_output(w_new_apple)
+    )
+
     registrador_4 apple_position (
         .clock ( clock ),
         .clear ( reset_apple ),
         .enable ( register_apple ),
-        .D ( 4'b1101 ),
+        .D ( w_new_apple ),
         .Q ( s_apple )
     );
 
