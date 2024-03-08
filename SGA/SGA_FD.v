@@ -29,7 +29,6 @@ module SGA_FD (
     output [35:0] db_leds
 );
 
-	  wire [3:0] s_address;
 	  wire [3:0] s_size;
     wire [3:0] s_render_count;
 	  wire [3:0] s_position;
@@ -68,7 +67,7 @@ module SGA_FD (
 
     sync_rom_16x4 snake_body (
         .clock ( clock ),
-        .address ( s_address ),
+        .address ( s_render_count ),
         .data_out ( s_position )
     );
 	 
@@ -86,7 +85,7 @@ module SGA_FD (
 
     matrizleds game_interface (
         .clock( clock ),
-        .apple(),
+        .apple( s_apple ),
         .position ( s_position ),
         .leds( db_leds )
     );
