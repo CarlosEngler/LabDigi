@@ -33,6 +33,7 @@ wire w_render_count;
 wire w_render_finish;
 wire w_register_apple;
 wire w_reset_apple;
+wire w_load_size;
 
 wire [3:0] s_contagem;
 wire [3:0] s_chaves;
@@ -52,6 +53,7 @@ wire [3:0] s_memoria;
         .db_tamanho(db_size),
         .db_macas_comidas( ),
         .db_leds(db_leds),
+        .load_size(w_load_size),
         .db_memoria( )
     );
 
@@ -74,6 +76,7 @@ wire [3:0] s_memoria;
         .finished(finished),
         .won(won),
         .lost(lost), 
+        .load_size(w_load_size),
         .db_state(db_state)
     );
 

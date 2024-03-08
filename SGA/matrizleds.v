@@ -6,6 +6,7 @@ output reg [35:0] leds
 );
 
     initial begin
+        leds = 36'd0;
         leds[6:0] = 7'b1111111;
         leds[12:11] = 2'b11;
         leds[18:17] = 2'b11;

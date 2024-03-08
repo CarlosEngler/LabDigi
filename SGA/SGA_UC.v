@@ -20,6 +20,7 @@ module SGA_UC (
     input      is_at_body,
     input      end_play_time,
     input      render_finish,
+    output reg load_size,
     output reg clear_size,
     output reg count_size,
     output reg render_clr,
@@ -84,6 +85,7 @@ module SGA_UC (
 
     // Logica de saida (maquina Moore)
     always @* begin
+        load_size      = (Ecurrent == IDLE ||Ecurrent == PREPARA) ? 1'b1 : 1'b0;
         clear_size     = (Ecurrent == IDLE || Ecurrent == PREPARA) ? 1'b1 : 1'b0;
         count_size     = (Ecurrent == RENDERIZA) ? 1'b1 : 1'b0;
         render_clr     = (Ecurrent == IDLE) ? 1'b1 : 1'b0;

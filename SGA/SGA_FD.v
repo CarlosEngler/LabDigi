@@ -17,6 +17,7 @@ module SGA_FD (
     input         restart,
     input         clear_size,
     input         count_size,
+    input         load_size,
     input         render_clr,
     input         render_count,
     input         register_apple,
