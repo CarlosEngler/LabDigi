@@ -87,7 +87,7 @@ module SGA_UC (
     always @* begin
         load_size      = (Ecurrent == IDLE || Ecurrent == PREPARA) ? 1'b1 : 1'b0;
         clear_size     = (Ecurrent == IDLE) ? 1'b1 : 1'b0;
-        count_size     = (Ecurrent == RENDERIZA) ? 1'b1 : 1'b0;
+        count_size     = (Ecurrent == CRESCE) ? 1'b1 : 1'b0;
         render_clr     = (Ecurrent == IDLE) ? 1'b1 : 1'b0;
         render_count   = (Ecurrent == PROXIMO_RENDER) ? 1'b1 : 1'b0;
         register_apple = (Ecurrent == GERA_MACA || Ecurrent == GERA_MACA_INICIAL) ? 1'b1 : 1'b0;
