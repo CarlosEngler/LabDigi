@@ -51,8 +51,8 @@ module simple_render_tb;
         .won(win_out),
         .lost(lost_out), 
         .db_state(db_state),
-        .db_leds(db_leds)
-        .db_size(db_size),
+        .db_leds(db_leds),
+        .db_size(db_size)
     );
 
     // geracao dos sinais de entrada (estimulos)
@@ -62,7 +62,7 @@ module simple_render_tb;
       // condicoes iniciais
       caso       = 0;
       clock_in   = 1;
-      restart_in   = 0;
+      restart_in = 0;
       start_in = 0;
       buttons_in  = 4'b0000;
       pause_in = 0;

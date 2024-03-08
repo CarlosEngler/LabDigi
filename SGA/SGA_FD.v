@@ -47,7 +47,7 @@ module SGA_FD (
       .rco  (  )
     );
 
-    contador_163 render_count (
+    contador_163 render_count_component (
       .clock( clock ),
       .clr  ( ~render_clr ), 
       .ld   ( 1'b1 ),

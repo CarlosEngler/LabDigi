@@ -56,7 +56,7 @@ module SGA_UC (
     always @(posedge clock or posedge restart) begin
         if (restart)
             Ecurrent <= IDLE;
-        elsif (pause)
+        else if (pause)
             Ecurrent <= PAUSOU;
         else
             Ecurrent <= Enext;
