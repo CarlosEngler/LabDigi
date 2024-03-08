@@ -30,29 +30,30 @@ module SGA_UC (
     output reg finished,
     output reg won,
     output reg lost, 
-    output reg [3:0] db_state
+    output reg [4:0] db_state
 );
 
     // Define estados
-    parameter IDLE              = 4'b0000;  // 0
-    parameter PREPARA           = 4'b0001;  // 1
-    parameter GERA_MACA_INICIAL = 4'b0010;  // 2
-    parameter RENDERIZA         = 4'b0011;  // 3
-    parameter ESPERA            = 4'b0100;  // 4
-    parameter REGISTRA          = 4'b0101;  // 5
-    parameter MOVE              = 4'b0110;  // 6
-    parameter COMPARA           = 4'b0111;  // 7
-    parameter COMEU_MACA        = 4'b1000;  // 8
-    parameter CRESCE            = 4'b1001;  // 9
-    parameter GERA_MACA         = 4'b1010;  // A
-    parameter PAUSOU            = 4'b1011;  // B
-    parameter FEZ_NADA          = 4'b1100;  // C
-    parameter PERDEU            = 4'b1101;  // D
-    parameter GANHOU            = 4'b1110;  // E
-    parameter PROXIMO_RENDER    = 4'b1111;  // F
+    parameter IDLE              = 5'b00000;  // 0
+    parameter PREPARA           = 5'b00001;  // 1
+    parameter GERA_MACA_INICIAL = 5'b00010;  // 2
+    parameter RENDERIZA         = 5'b00011;  // 3
+    parameter ESPERA            = 5'b00100;  // 4
+    parameter REGISTRA          = 5'b00101;  // 5
+    parameter MOVE              = 5'b00110;  // 6
+    parameter COMPARA           = 5'b00111;  // 7
+    parameter COMEU_MACA        = 5'b01000;  // 8
+    parameter CRESCE            = 5'b01001;  // 9
+    parameter GERA_MACA         = 5'b01010;  // A
+    parameter PAUSOU            = 5'b01011;  // B
+    parameter FEZ_NADA          = 5'b01100;  // C
+    parameter PERDEU            = 5'b01101;  // D
+    parameter GANHOU            = 5'b01110;  // E
+    parameter PROXIMO_RENDER    = 5'b01111;  // F
+    parameter ATUALIZA_MEMORIA  = 5'b10000;  // G
 
     // Variaveis de estado
-    reg [3:0] Ecurrent, Enext;
+    reg [4:0] Ecurrent, Enext;
 
     // Memoria de estado
     always @(posedge clock or posedge restart) begin
@@ -70,7 +71,8 @@ module SGA_UC (
             IDLE:                   Enext = start ? PREPARA : IDLE;
             PREPARA:                Enext = GERA_MACA_INICIAL;
             GERA_MACA_INICIAL:      Enext = RENDERIZA;
-            RENDERIZA:              Enext = render_finish ? ESPERA : PROXIMO_RENDER;
+            RENDERIZA:              Enext = render_finish ? ESPERA : ATUALIZA_MEMORIA;
+            ATUALIZA_MEMORIA:       Enext = PROXIMO_RENDER;
             PROXIMO_RENDER:         Enext = RENDERIZA;
             ESPERA:                 Enext = end_play_time ? REGISTRA : ESPERA;
             REGISTRA:               Enext = MOVE;
@@ -98,23 +100,24 @@ module SGA_UC (
         
         // Saida de depuracao (estado)
         case (Ecurrent)
-            IDLE              : db_state = 4'b0000;  // 0
-            PREPARA           : db_state = 4'b0001;  // 1
-            GERA_MACA_INICIAL : db_state = 4'b0010;  // 2
-            RENDERIZA         : db_state = 4'b0011;  // 3
-            ESPERA            : db_state = 4'b0100;  // 4
-            REGISTRA          : db_state = 4'b0101;  // 5
-            MOVE              : db_state = 4'b0110;  // 6
-            COMPARA           : db_state = 4'b0111;  // 7
-            COMEU_MACA        : db_state = 4'b1000;  // 8
-            CRESCE            : db_state = 4'b1001;  // 9
-            GERA_MACA         : db_state = 4'b1010;  // A
-            PAUSOU            : db_state = 4'b1011;  // B
-            FEZ_NADA          : db_state = 4'b1100;  // C
-            PERDEU            : db_state = 4'b1101;  // D
-            GANHOU            : db_state = 4'b1110;  // E
-            PROXIMO_RENDER    : db_state = 4'b1111;  // F
-            default           : db_state = 4'b0000;  // 0
+            IDLE              : db_state = 5'b00000;  // 0
+            PREPARA           : db_state = 5'b00001;  // 1
+            GERA_MACA_INICIAL : db_state = 5'b00010;  // 2
+            RENDERIZA         : db_state = 5'b00011;  // 3
+            ESPERA            : db_state = 5'b00100;  // 4
+            REGISTRA          : db_state = 5'b00101;  // 5
+            MOVE              : db_state = 5'b00110;  // 6
+            COMPARA           : db_state = 5'b00111;  // 7
+            COMEU_MACA        : db_state = 5'b01000;  // 8
+            CRESCE            : db_state = 5'b01001;  // 9
+            GERA_MACA         : db_state = 5'b01010;  // A
+            PAUSOU            : db_state = 5'b01011;  // B
+            FEZ_NADA          : db_state = 5'b01100;  // C
+            PERDEU            : db_state = 5'b01101;  // D
+            GANHOU            : db_state = 5'b01110;  // E
+            PROXIMO_RENDER    : db_state = 5'b01111;  // F
+            ATUALIZA_MEMORIA  : db_state = 5'b10000;  // G
+            default           : db_state = 5'b00000;  // 0
         endcase
     end
 

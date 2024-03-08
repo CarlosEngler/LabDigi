@@ -22,7 +22,7 @@ module SGA (
  output         finished,
  output         won,
  output         lost, 
- output         [3:0] db_state,
+ output         [4:0] db_state,
  output         [35:0] db_leds
  );
 

@@ -27,7 +27,7 @@ module simple_render_tb;
     wire       finished_out;
     wire       win_out;
     wire       lost_out;
-    wire [6:0]  db_state;
+    wire [4:0]  db_state;
     wire [35:0] db_leds;
     wire [3:0]  db_size;
 
