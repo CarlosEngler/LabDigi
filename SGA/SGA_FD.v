@@ -29,16 +29,22 @@ module SGA_FD (
     input         we_ram,
     input         mux_ram,
     input         recharge,
+    input         load_ram,
+    input         counter_ram,
+    input         mux_ram_addres,
+    input         mux_ram_render,
     output        render_finish,
     output [3:0]  db_tamanho,
     output [3:0]  db_macas_comidas,
     output [3:0]  db_memoria,
     output [35:0] db_leds,
     output end_play_time,
+    output end_move,
     output played
 );
 
 	  wire [3:0] s_size;
+    wire [3:0] s_address;
     wire [3:0] s_render_count;
 	  wire [3:0] s_position;
     wire [3:0] s_apple;
@@ -51,6 +57,8 @@ module SGA_FD (
     wire [3:0] headYSubtrai;
     wire [3:0] newHead;
     wire [3:0] dataRAM;
+    wire [3:0] addresRAM;
+    wire [3:0] renderRAM;
 
 
     assign sinal = buttons[0] | buttons [1] | buttons[2] | buttons [3];   
@@ -75,6 +83,17 @@ module SGA_FD (
       .ent  ( 1'b1 ),
       .D    ( 4'd0 ), 
       .Q    ( s_render_count ),
+      .rco  (  )
+    );
+
+    contador_negativo163 ram_counter (
+      .clock( clock ),
+      .clr  ( 1'b1 ), 
+      .ld   ( ~load_ram ),
+      .enp  ( counter_ram ),
+      .ent  ( 1'b1 ),
+      .D    ( s_size ), 
+      .Q    ( s_address ),
       .rco  (  )
     );
 
@@ -130,6 +149,17 @@ module SGA_FD (
       .AEBo( render_finish )
     );
 
+    comparador_85 ram_comparator (
+      .A   ( 4'b0000 ),
+      .B   ( s_address ),
+      .ALBi( 1'b0 ), 
+      .AGBi( 1'b0 ),
+      .AEBi( 1'b1 ),
+      .ALBo( ), 
+      .AGBo( ),
+      .AEBo( end_move )
+    );
+
     matrizleds game_interface (
         .clock( clock ),
         .apple( s_apple ),
@@ -139,6 +169,8 @@ module SGA_FD (
     );
 
     assign  dataRAM = mux_ram ? s_position : newHead;
+    assign  addresRAM = mux_ram_addres ? (s_address + 4'b0001): s_address;
+    assign  renderRAM = mux_ram_render ? addresRAM : s_render_count; 
 
     	 sync_ram_16x4_file #(
         .BINFILE("ram_init.txt")
@@ -147,7 +179,7 @@ module SGA_FD (
 			.clk(clock),
 			.we( we_ram ),
 			.data( dataRAM ),
-			.addr( s_render_count ),
+			.addr( renderRAM ),
 			.q( s_position )
     );
 

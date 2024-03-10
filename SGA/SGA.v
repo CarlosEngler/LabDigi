@@ -48,6 +48,12 @@ wire [3:0] s_contagem;
 wire [3:0] s_chaves;
 wire [3:0] s_memoria;
 
+wire w_load_ram;
+wire w_counter_ram;
+wire w_mux_ram_addres;
+wire w_mux_ram_render;
+wire w_end_move;
+
 	SGA_FD FD(
         .clock(clock),
         .buttons(buttons),
@@ -72,6 +78,11 @@ wire [3:0] s_memoria;
         .mux_ram(w_mux_ram),
         .end_play_time(w_end_play_time),
         .direction(w_direction),
+        .load_ram(w_load_ram),
+        .counter_ram(w_counter_ram),
+        .mux_ram_addres(w_mux_ram_addres),
+        .mux_ram_render(w_mux_ram_render),
+        .end_move(w_end_move),
         .recharge(w_recharge)
     );
 
@@ -107,6 +118,11 @@ wire [3:0] s_memoria;
         .down(buttons[0]),
         .played(w_played),
         .direction(w_direction),
+        .load_ram(w_load_ram),
+        .counter_ram(w_counter_ram),
+        .mux_ram_addres(w_mux_ram_addres),
+        .mux_ram_render(w_mux_ram_render),
+        .end_move(w_end_move),
         .recharge(w_recharge)
     );
 

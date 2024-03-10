@@ -25,6 +25,7 @@ module SGA_UC (
     input      up,
     input      down,
     input      played,
+    input      end_move,
     output reg load_size,
     output reg clear_size,
     output reg count_size,
@@ -40,9 +41,13 @@ module SGA_UC (
     output reg count_play_time,
     output reg [4:0] db_state,
     output reg [1:0] direction,
-    output reg       we_ram,
-    output reg       mux_ram,
-    output reg       recharge
+    output reg we_ram,
+    output reg mux_ram,
+    output reg recharge,
+    output reg load_ram,
+    output reg counter_ram,
+    output reg mux_ram_addres,
+    output reg mux_ram_render
 );
 
     // Define estados
@@ -66,7 +71,7 @@ module SGA_UC (
     parameter ContaRAM          = 5'b10001;  // h
     parameter WriteRAM          = 5'b10010;  // i
     parameter ComparaRAM        = 5'b10011;  // j
-    parameter RESETMATRIZ       = 5'b10100;  // j
+    parameter RESETMATRIZ       = 5'b10100;  // k
 
 
 
@@ -100,10 +105,10 @@ module SGA_UC (
             ATUALIZA_MEMORIA:       Enext = RENDERIZA;
             ESPERA:                 Enext = (end_play_time | played) ? REGISTRA : ESPERA;
             REGISTRA:               Enext = MOVE;
-            MOVE:                   Enext = ContaRAM;
-            ContaRAM:               Enext = WriteRAM;
+            MOVE:                   Enext = WriteRAM;
+            ContaRAM:               Enext = MOVE;
             WriteRAM:               Enext = ComparaRAM;
-            ComparaRAM:             Enext = render_finish ? COMPARA : MOVE;
+            ComparaRAM:             Enext = end_move ? COMPARA : ContaRAM;
             COMPARA:                Enext = FEZ_NADA;
             PAUSOU:                 Enext = start ? ESPERA : PAUSOU;
             FEZ_NADA:               Enext = RESETMATRIZ;
@@ -120,7 +125,7 @@ module SGA_UC (
         count_size          = (Ecurrent == CRESCE) ? 1'b1 : 1'b0;
         recharge            = (Ecurrent == RESETMATRIZ) ? 1'b1 : 1'b0;
         render_clr          = (Ecurrent == IDLE || Ecurrent == ESPERA || Ecurrent == COMPARA) ? 1'b1 : 1'b0;
-        render_count        = (Ecurrent == PROXIMO_RENDER || Ecurrent == ContaRAM) ? 1'b1 : 1'b0;
+        render_count        = (Ecurrent == PROXIMO_RENDER) ? 1'b1 : 1'b0;
         register_apple      = (Ecurrent == GERA_MACA || Ecurrent == GERA_MACA_INICIAL) ? 1'b1 : 1'b0;
         reset_apple         = (Ecurrent == COMEU_MACA);
         register_head       = (Ecurrent == REGISTRA) ? 1'b1 : 1'b0;
@@ -129,8 +134,13 @@ module SGA_UC (
         won                 = (Ecurrent == GANHOU) ? 1'b1 : 1'b0;
         lost                = (Ecurrent == PERDEU) ? 1'b1 : 1'b0;
         count_play_time     = (Ecurrent == ESPERA) ? 1'b1 : 1'b0;
-        we_ram              = (Ecurrent == WriteRAM || Ecurrent == ContaRAM || Ecurrent == FEZ_NADA) ? 1'b1 : 1'b0;
+        we_ram              = (Ecurrent == WriteRAM|| Ecurrent == FEZ_NADA) ? 1'b1 : 1'b0;
         mux_ram             = (Ecurrent == ContaRAM || Ecurrent == MOVE || Ecurrent == WriteRAM || Ecurrent == ComparaRAM) ? 1'b1 : 1'b0;
+        load_ram            = (Ecurrent == REGISTRA) ? 1'b1 : 1'b0;
+        counter_ram         = (Ecurrent == ContaRAM) ? 1'b1 : 1'b0;
+        mux_ram_addres      = (Ecurrent == WriteRAM) ? 1'b1 : 1'b0;
+        mux_ram_render      = (Ecurrent == ContaRAM || Ecurrent == MOVE || Ecurrent == WriteRAM || Ecurrent == ComparaRAM) ? 1'b1 : 1'b0;
+
 
         if (restart) begin                      
         direction <= 2'b00;                    
@@ -164,10 +174,10 @@ module SGA_UC (
             GANHOU            : db_state = 5'b01110;  // E
             PROXIMO_RENDER    : db_state = 5'b01111;  // F
             ATUALIZA_MEMORIA  : db_state = 5'b10000;  // G
-            ContaRAM          : db_state = 5'b10001;  // G
-            WriteRAM          : db_state = 5'b10010;  // h
-            ComparaRAM        : db_state = 5'b10011;  // i
-            RESETMATRIZ       : db_state = 5'b10100;  // j
+            ContaRAM          : db_state = 5'b10001;  // h
+            WriteRAM          : db_state = 5'b10010;  // i
+            ComparaRAM        : db_state = 5'b10011;  // j
+            RESETMATRIZ       : db_state = 5'b10100;  // k
             default           : db_state = 5'b00000;  // 0
         endcase
     end

@@ -88,11 +88,7 @@ module simple_render_tb;
       #(clockPeriod);
       start_in = 0;
 
-      #(500*clockPeriod);
-
-      buttons_in = 4'b0001;
-
-      #(100*clockPeriod);
+      #(800*clockPeriod);
 
       // Teste 4 (manter chaves em 0100 por 1 periodo de clock)
 
