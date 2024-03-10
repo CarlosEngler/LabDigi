@@ -22,8 +22,7 @@ module SGA (
  output         finished,
  output         won,
  output         lost, 
- output         [6:0] db_state,
- output         [6:0] db_state2,
+ output         [4:0] db_state,
  output         [35:0] db_leds
  );
 
@@ -48,7 +47,6 @@ wire w_recharge;
 wire [3:0] s_contagem;
 wire [3:0] s_chaves;
 wire [3:0] s_memoria;
-wire [4:0] s_estado;
 
 wire w_load_ram;
 wire w_counter_ram;
@@ -113,7 +111,7 @@ wire w_end_move;
         .lost(lost), 
         .load_size(w_load_size),
         .count_play_time(w_count_play_time),
-        .db_state(s_estado),
+        .db_state(db_state),
         .left(buttons[3]),
         .right(buttons[2]),
         .up(buttons[1]),
@@ -127,13 +125,5 @@ wire w_end_move;
         .end_move(w_end_move),
         .recharge(w_recharge)
     );
-	 
-  hexa7seg HEX5(
-    .hexa({3'b000, s_estado[4]}), .display(db_state)
-);
-
-	hexa7seg HEX4(
-    .hexa(s_estado[3:0]), .display(db_state2)
-);
 
 endmodule

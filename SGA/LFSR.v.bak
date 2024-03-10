@@ -1,7 +1,7 @@
 module LFSR (
     input clk,
     input reset,
-    output [3:0] lfsr_output
+    output reg [3:0] lfsr_output
 );
 
 reg [3:0] lfsr_register;

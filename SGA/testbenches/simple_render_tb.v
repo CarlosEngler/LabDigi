@@ -27,7 +27,8 @@ module simple_render_tb;
     wire       finished_out;
     wire       win_out;
     wire       lost_out;
-    wire [4:0]  db_state;
+    wire [6:0]  db_state;
+    wire [6:0]  db_state2;
     wire [35:0] db_leds;
     wire [3:0]  db_size;
 
@@ -51,6 +52,7 @@ module simple_render_tb;
         .won(win_out),
         .lost(lost_out), 
         .db_state(db_state),
+        .db_state2(db_state2),
         .db_leds(db_leds),
         .db_size(db_size)
     );
