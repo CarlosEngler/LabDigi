@@ -22,11 +22,20 @@ module SGA_FD (
     input         render_count,
     input         register_apple,
     input         reset_apple,
+    input         count_play_time,
+    input         register_head,
+    input         reset_head,
+    input  [1:0]  direction,
+    input         we_ram,
+    input         mux_ram,
+    input         recharge,
     output        render_finish,
     output [3:0]  db_tamanho,
     output [3:0]  db_macas_comidas,
     output [3:0]  db_memoria,
-    output [35:0] db_leds
+    output [35:0] db_leds,
+    output end_play_time,
+    output played
 );
 
 	  wire [3:0] s_size;
@@ -34,6 +43,17 @@ module SGA_FD (
 	  wire [3:0] s_position;
     wire [3:0] s_apple;
     wire [3:0] w_new_apple;
+    wire sinal;
+    wire [3:0] head;
+    wire [3:0] headXsoma;
+    wire [3:0] headXsubtrai;
+    wire [3:0] headYSoma;
+    wire [3:0] headYSubtrai;
+    wire [3:0] newHead;
+    wire [3:0] dataRAM;
+
+
+    assign sinal = buttons[0] | buttons [1] | buttons[2] | buttons [3];   
 
     // contador_163
     contador_163 snake_size (
@@ -64,6 +84,17 @@ module SGA_FD (
       .lfsr_output(w_new_apple)
     );
 
+    	 contador_m #( .M(200), .N(10) ) contador_de_jogada (
+      .clock  ( clock ),
+      .zera_as( restart ),
+      .zera_s ( render_count ),
+      .conta  ( count_play_time ),
+      .Q      (  ),
+      .fim    ( end_play_time ),
+      .meio   (),
+      .quarto ()
+    );
+
     registrador_4 apple_position (
         .clock ( clock ),
         .clear ( reset_apple ),
@@ -72,10 +103,19 @@ module SGA_FD (
         .Q ( s_apple )
     );
 
-    sync_rom_16x4 snake_body (
+    registrador_4 head_position (
         .clock ( clock ),
-        .address ( s_render_count ),
-        .data_out ( s_position )
+        .clear ( reset_head ),
+        .enable ( register_head ),
+        .D ( s_position ),
+        .Q ( head )
+    );
+
+    edge_detector detector (
+      .clock(clock),
+      .reset(restart),
+      .sinal(sinal),
+      .pulso(played)
     );
 	 
 	 // comparador_85
@@ -94,7 +134,35 @@ module SGA_FD (
         .clock( clock ),
         .apple( s_apple ),
         .position ( s_position ),
-        .leds( db_leds )
+        .leds( db_leds ),
+        .restart( recharge | restart )
+    );
+
+    assign  dataRAM = mux_ram ? s_position : newHead;
+
+    	 sync_ram_16x4_file #(
+        .BINFILE("ram_init.txt")
+    ) RAM
+    (
+			.clk(clock),
+			.we( we_ram ),
+			.data( dataRAM ),
+			.addr( s_render_count ),
+			.q( s_position )
+    );
+
+    assign headXsoma = {head[3:2] , head[1:0] + 2'b01} ;
+    assign headXsubtrai = {head[3:2], head[1:0] - 2'b01} ;
+    assign headYSoma = {head[3:2] + 2'b01 , head[1:0]} ;
+    assign headYSubtrai = {head[3:2] - 2'b01 , head[1:0]} ;
+
+    mux4x1_n #( .BITS(4) ) mux_zera (
+      .D0(headXsoma),
+      .D1(headXsubtrai),
+      .D2(headYSoma),
+      .D3(headYSubtrai),
+      .SEL(direction),
+      .OUT(newHead)
     );
 
   assign db_memoria = s_position;

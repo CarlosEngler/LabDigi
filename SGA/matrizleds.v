@@ -2,6 +2,7 @@ module matrizleds(
 input [3:0] position,
 input [3:0] apple,
 input clock,
+input restart,
 output reg [35:0] leds
 );
 
@@ -55,6 +56,14 @@ output reg [35:0] leds
             4'b1111: leds[28] = 1'b1;
         endcase
     end
+
+    always @ (restart) begin
+        leds[10:7] = 4'b0000;
+        leds[16:13] = 4'b0000;
+        leds[22:19] = 4'b0000;
+        leds[28:25] = 4'b0000;
+    end
+
 
 
 
