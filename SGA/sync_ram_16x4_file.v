@@ -24,7 +24,8 @@ module sync_ram_16x4_file #(
     input        we,
     input  [3:0] data,
     input  [3:0] addr,
-    output [3:0] q
+    output [3:0] q,
+    output [3:0] head
 );
 
     // Variavel RAM (armazena dados)
@@ -53,5 +54,6 @@ module sync_ram_16x4_file #(
 
     // Atribuicao continua retorna dado
     assign q = ram[addr_reg];
+    assign head = ram[0];
 
 endmodule

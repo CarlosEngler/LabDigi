@@ -35,6 +35,8 @@ module SGA_FD (
     input         mux_ram_render,
     output        render_finish,
     output [3:0]  db_tamanho,
+    output [3:0]  db_apple,
+    output [3:0]  db_head,
     output [3:0]  db_macas_comidas,
     output [3:0]  db_memoria,
     output [35:0] db_leds,
@@ -180,7 +182,8 @@ module SGA_FD (
 			.we( we_ram ),
 			.data( dataRAM ),
 			.addr( renderRAM ),
-			.q( s_position )
+			.q( s_position ),
+      .head( db_head )
     );
 
     assign headXsoma = {head[3:2] , head[1:0] + 2'b01} ;
@@ -198,5 +201,6 @@ module SGA_FD (
     );
 
   assign db_memoria = s_position;
+  assign db_apple = s_apple;
 
 endmodule

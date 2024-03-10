@@ -24,6 +24,10 @@ module SGA (
  output         lost, 
  output         [6:0] db_state,
  output         [6:0] db_state2,
+ output         [6:0] db_headX,
+ output         [6:0] db_headY,
+ output         [6:0] db_appleX,
+ output         [6:0] db_appleY,
  output         [35:0] db_leds
  );
 
@@ -49,6 +53,8 @@ wire [3:0] s_contagem;
 wire [3:0] s_chaves;
 wire [3:0] s_memoria;
 wire [4:0] s_estado;
+wire [3:0] s_apple;
+wire [3:0] s_head;
 
 wire w_load_ram;
 wire w_counter_ram;
@@ -74,6 +80,8 @@ wire w_end_move;
         .db_leds(db_leds),
         .load_size(w_load_size),
         .db_memoria( ),
+        .db_apple(s_apple),
+        .db_head(s_head),
         .count_play_time(w_count_play_time),
         .played(w_played),
         .we_ram(w_we_ram),
@@ -134,6 +142,22 @@ wire w_end_move;
 
 	hexa7seg HEX4(
     .hexa(s_estado[3:0]), .display(db_state2)
+);
+
+	hexa7seg HEX3(
+    .hexa({2'b00, s_apple[1:0]}), .display(db_appleX)
+);
+
+	hexa7seg HEX2(
+    .hexa({2'b00, s_apple[3:2]}), .display(db_appleY)
+);
+
+	hexa7seg HEX1(
+    .hexa({2'b00, s_head[1:0]}), .display(db_headX)
+);
+
+	hexa7seg HEX0(
+    .hexa({2'b00, s_head[1:0]}), .display(db_headY)
 );
 
 endmodule
