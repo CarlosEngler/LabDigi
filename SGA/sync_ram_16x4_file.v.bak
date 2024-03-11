@@ -22,7 +22,6 @@ module sync_ram_16x4_file #(
 (
     input        clk,
     input        we,
-	 input        restart,
     input  [3:0] data,
     input  [3:0] addr,
     output [3:0] q,
@@ -37,19 +36,21 @@ module sync_ram_16x4_file #(
 
     // Especifica conteudo inicial da RAM
     // a partir da leitura de arquivo usando $readmemb
+    initial 
+    begin : INICIA_RAM
+        // leitura do conteudo a partir de um arquivo
+        ram[0] = 4'b0010;
+        ram[1] = 4'b0001;
+        // $readmemb(BINFILE, ram);
+    end 
 
-    always @ (posedge clk or posedge restart)
+    always @ (posedge clk)
     begin
-	 if(restart) begin
-		  ram[0] <= 4'b0110;
-        ram[1] <= 4'b0101;
-	 end else begin
-		 if (we)
-				ram[addr] <= data;
+        if (we)
+            ram[addr] <= data;
 
-			   addr_reg <= addr;
-		 end
-	 end
+        addr_reg <= addr;
+    end
 
     // Atribuicao continua retorna dado
     assign q = ram[addr_reg];

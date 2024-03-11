@@ -42,8 +42,7 @@ module SGA_FD (
     output [35:0] db_leds,
     output end_play_time,
     output end_move,
-    output played,
-	 output comeu_maca
+    output played
 );
 
 	  wire [3:0] s_size;
@@ -106,7 +105,7 @@ module SGA_FD (
       .lfsr_output(w_new_apple)
     );
 
-    	 contador_m #( .M(400), .N(13) ) contador_de_jogada (
+    	 contador_m #( .M(200), .N(10) ) contador_de_jogada (
       .clock  ( clock ),
       .zera_as( restart ),
       .zera_s ( render_count ),
@@ -162,17 +161,6 @@ module SGA_FD (
       .AGBo( ),
       .AEBo( end_move )
     );
-	 
-	 comparador_85 comparador_comeu_maca (
-      .A   ( s_apple ),
-      .B   ( head ),
-      .ALBi( 1'b0 ), 
-      .AGBi( 1'b0 ),
-      .AEBi( 1'b1 ),
-      .ALBo( ), 
-      .AGBo( ),
-      .AEBo( comeu_maca )
-    );
 
     matrizleds game_interface (
         .clock( clock ),
@@ -195,8 +183,7 @@ module SGA_FD (
 			.data( dataRAM ),
 			.addr( renderRAM ),
 			.q( s_position ),
-      .head( db_head ),
-		.restart(restart)
+      .head( db_head )
     );
 
     assign headXsoma = {head[3:2] , head[1:0] + 2'b01} ;
@@ -215,6 +202,5 @@ module SGA_FD (
 
   assign db_memoria = s_position;
   assign db_apple = s_apple;
-  assign db_tamanho = s_size;
 
 endmodule

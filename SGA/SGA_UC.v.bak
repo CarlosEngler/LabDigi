@@ -26,7 +26,6 @@ module SGA_UC (
     input      down,
     input      played,
     input      end_move,
-	 input      comeu_maca,
     output reg load_size,
     output reg clear_size,
     output reg count_size,
@@ -110,10 +109,7 @@ module SGA_UC (
             ContaRAM:               Enext = MOVE;
             WriteRAM:               Enext = ComparaRAM;
             ComparaRAM:             Enext = end_move ? COMPARA : ContaRAM;
-            COMPARA:                Enext = comeu_maca ? COMEU_MACA: FEZ_NADA;
-				COMEU_MACA:             Enext = CRESCE;
-				CRESCE:                 Enext = GERA_MACA;
-				GERA_MACA:              Enext = FEZ_NADA;
+            COMPARA:                Enext = FEZ_NADA;
             PAUSOU:                 Enext = start ? ESPERA : PAUSOU;
             FEZ_NADA:               Enext = RESETMATRIZ;
             RESETMATRIZ:            Enext = RENDERIZA;
@@ -131,7 +127,7 @@ module SGA_UC (
         render_clr          = (Ecurrent == IDLE || Ecurrent == ESPERA || Ecurrent == COMPARA) ? 1'b1 : 1'b0;
         render_count        = (Ecurrent == PROXIMO_RENDER) ? 1'b1 : 1'b0;
         register_apple      = (Ecurrent == GERA_MACA || Ecurrent == GERA_MACA_INICIAL) ? 1'b1 : 1'b0;
-        reset_apple         = (Ecurrent == COMEU_MACA || Ecurrent == IDLE || Ecurrent == PREPARA);
+        reset_apple         = (Ecurrent == COMEU_MACA);
         register_head       = (Ecurrent == REGISTRA) ? 1'b1 : 1'b0;
         reset_head          = (Ecurrent == IDLE);
         finished            = (Ecurrent == GANHOU || Ecurrent == PERDEU) ? 1'b1 : 1'b0;
@@ -151,14 +147,12 @@ module SGA_UC (
         end else begin
         if (left && direction != 2'b00)  
             direction <= 2'b01;                   
-        else if (up && direction != 2'b10)     
+        if (up && direction != 2'b10)     
             direction <= 2'b11;                     
-        else if (down && direction != 2'b11)     
+        if (down && direction != 2'b11)     
             direction <= 2'b10;                   
-        else if (right && direction != 2'b01)  
-            direction <= 2'b00;      
-		  else
-				direction <= direction;
+        if (right && direction != 2'b01)  
+            direction <= 2'b00;                  
         end
         
         // Saida de depuracao (estado)

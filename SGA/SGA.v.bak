@@ -17,15 +17,18 @@ module SGA (
  input          [3:0] buttons,
  input          start,
  input          restart,
- output         [3:0] db_size, 
+ input          pause,
+ output         [3:0] db_size,
+ output         finished,
+ output         won,
+ output         lost, 
  output         [6:0] db_state,
  output         [6:0] db_state2,
  output         [6:0] db_headX,
  output         [6:0] db_headY,
  output         [6:0] db_appleX,
  output         [6:0] db_appleY,
- output         [1:0] direction,
- output         [3:0] leds
+ output         [35:0] db_leds
  );
 
 wire w_clr_size;
@@ -58,7 +61,6 @@ wire w_counter_ram;
 wire w_mux_ram_addres;
 wire w_mux_ram_render;
 wire w_end_move;
-wire w_comeu_maca;
 
 	SGA_FD FD(
         .clock(clock),
@@ -75,7 +77,7 @@ wire w_comeu_maca;
         .reset_head(w_reset_head),
         .db_tamanho(db_size),
         .db_macas_comidas( ),
-        .db_leds( ),
+        .db_leds(db_leds),
         .load_size(w_load_size),
         .db_memoria( ),
         .db_apple(s_apple),
@@ -91,7 +93,6 @@ wire w_comeu_maca;
         .mux_ram_addres(w_mux_ram_addres),
         .mux_ram_render(w_mux_ram_render),
         .end_move(w_end_move),
-		  .comeu_maca(w_comeu_maca),
         .recharge(w_recharge)
     );
 
@@ -132,16 +133,15 @@ wire w_comeu_maca;
         .mux_ram_addres(w_mux_ram_addres),
         .mux_ram_render(w_mux_ram_render),
         .end_move(w_end_move),
-		  .comeu_maca(w_comeu_maca),
         .recharge(w_recharge)
     );
 	 
   hexa7seg HEX5(
-    .hexa({3'b000, s_estado[4]}), .display(db_state2)
+    .hexa({3'b000, s_estado[4]}), .display(db_state)
 );
 
 	hexa7seg HEX4(
-    .hexa(s_estado[3:0]), .display(db_state)
+    .hexa(s_estado[3:0]), .display(db_state2)
 );
 
 	hexa7seg HEX3(
@@ -157,10 +157,7 @@ wire w_comeu_maca;
 );
 
 	hexa7seg HEX0(
-    .hexa({2'b00, s_head[3:2]}), .display(db_headY)
+    .hexa({2'b00, s_head[1:0]}), .display(db_headY)
 );
-
-assign direction = w_direction;
-assign leds = buttons;
 
 endmodule
