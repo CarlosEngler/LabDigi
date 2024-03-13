@@ -11,13 +11,15 @@
 // Revisoes  :
 //     Data        Versao  Autor             Descricao
 //     14/12/2023  1.0     Edson Midorikawa  versao inicial
+//     13/03/2024  2.0      Carlos Engler    Add Half_rco   
 //------------------------------------------------------------------
 //
-module contador_163 ( clock, clr, ld, ent, enp, D, Q, rco );
+module contador_163 ( clock, clr, ld, ent, enp, D, Q, rco, half_rco);
     input clock, clr, ld, ent, enp;
     input [3:0] D;
     output reg [3:0] Q;
     output reg rco;
+    output reg half_rco;
 
     always @ (posedge clock)
         if (~clr)               Q <= 4'd0;
@@ -28,4 +30,8 @@ module contador_163 ( clock, clr, ld, ent, enp, D, Q, rco );
     always @ (Q or ent)
         if (ent && (Q == 4'd14))   rco = 1;
         else                       rco = 0;
+
+    always @ (Q or ent)
+        if (ent && (Q == 4'd6))   half_rco = 1;
+        else                      half_rco = 0;
 endmodule

@@ -5,8 +5,9 @@
 // Descricao : Unidade de controle            
 //------------------------------------------------------------------
 // Revisoes  :
-//     Data        Versao  Autor                        Descricao
-//     08/03/2024  1.0     Erick Sousa, João Basseti  versao inicial
+//     Data        Versao  Autor                                          Descricao
+//     08/03/2024  1.0     Erick Sousa, João Basseti                    versao inicial
+//     13/03/2024  1.0     Erick Sousa, João Bassetti, Carlos Engler       Semana 2
 //------------------------------------------------------------------
 //
 
@@ -15,7 +16,7 @@ module SGA_UC (
     input      restart, 
     input      start,
     input      pause,
-    input      end_play_time,
+    input      chosen_play_time,
     input      render_finish,
     input      left,
     input      right,
@@ -50,6 +51,8 @@ module SGA_UC (
     output reg counter_ram,
     output reg mux_ram_addres,
     output reg zera_counter_play_time,
+    output reg register_game_parameters,
+    output reg reset_game_parameters,
     output reg mux_ram_render
 );
 
@@ -105,7 +108,7 @@ module SGA_UC (
             RENDERIZA:              Enext = render_finish ? ESPERA : PROXIMO_RENDER;
             PROXIMO_RENDER:         Enext = ATUALIZA_MEMORIA;
             ATUALIZA_MEMORIA:       Enext = RENDERIZA;
-            ESPERA:                 Enext = pause ? PAUSOU : ((end_play_time | played) ? REGISTRA : ESPERA);
+            ESPERA:                 Enext = pause ? PAUSOU : ((chosen_play_time | played) ? REGISTRA : ESPERA);
             REGISTRA:               Enext = COMPARA;
             COMPARA:                Enext = !wall_collision ? (self_collision_on ? CONTASELF : VERIFICA_MACA) : PERDEU;
             COMPARASELF:            Enext = !self_collision ? (render_finish ? VERIFICA_MACA : CONTASELF) : PERDEU;
@@ -129,41 +132,47 @@ module SGA_UC (
 
     // Logica de saida (maquina Moore)
     always @* begin
-        load_size               = (Ecurrent == IDLE || Ecurrent == PREPARA) ? 1'b1 : 1'b0;
-        clear_size              = (Ecurrent == IDLE) ? 1'b1 : 1'b0;
-        count_size              = (Ecurrent == CRESCE) ? 1'b1 : 1'b0;
-        recharge                = (Ecurrent == RESETMATRIZ || Ecurrent == IDLE || Ecurrent == PREPARA || Ecurrent == GERA_MACA_INICIAL) ? 1'b1 : 1'b0;
-        render_clr              = (Ecurrent == IDLE || Ecurrent == ESPERA || Ecurrent == COMPARA || Ecurrent == VERIFICA_MACA) ? 1'b1 : 1'b0;
-        render_count            = (Ecurrent == PROXIMO_RENDER || Ecurrent == CONTASELF) ? 1'b1 : 1'b0;
-        register_apple          = (Ecurrent == GERA_MACA || Ecurrent == GERA_MACA_INICIAL) ? 1'b1 : 1'b0;
-        reset_apple             = (Ecurrent == IDLE || Ecurrent == PREPARA);
-        register_head           = (Ecurrent == REGISTRA) ? 1'b1 : 1'b0;
-        reset_head              = (Ecurrent == IDLE);
-        finished                = (Ecurrent == GANHOU || Ecurrent == PERDEU) ? 1'b1 : 1'b0;
-        won                     = (Ecurrent == GANHOU) ? 1'b1 : 1'b0;
-        lost                    = (Ecurrent == PERDEU) ? 1'b1 : 1'b0;
-        count_play_time         = (Ecurrent == ESPERA) ? 1'b1 : 1'b0;
-        we_ram                  = (Ecurrent == WriteRAM|| Ecurrent == FEZ_NADA) ? 1'b1 : 1'b0;
-        mux_ram                 = (Ecurrent == ContaRAM || Ecurrent == MOVE || Ecurrent == WriteRAM || Ecurrent == ComparaRAM) ? 1'b1 : 1'b0;
-        load_ram                = (Ecurrent == REGISTRA) ? 1'b1 : 1'b0;
-        counter_ram             = (Ecurrent == ContaRAM) ? 1'b1 : 1'b0;
-        mux_ram_addres          = (Ecurrent == WriteRAM) ? 1'b1 : 1'b0;
-        mux_ram_render          = (Ecurrent == ContaRAM || Ecurrent == MOVE || Ecurrent == WriteRAM || Ecurrent == ComparaRAM) ? 1'b1 : 1'b0;
-        zera_counter_play_time  = (Ecurrent == PAUSOU) ? 1'b1 : 1'b0;
+        load_size                   = (Ecurrent == IDLE || Ecurrent == PREPARA) ? 1'b1 : 1'b0;
+        clear_size                  = (Ecurrent == IDLE) ? 1'b1 : 1'b0;
+        count_size                  = (Ecurrent == CRESCE) ? 1'b1 : 1'b0;
+        recharge                    = (Ecurrent == RESETMATRIZ || Ecurrent == IDLE || Ecurrent == PREPARA || Ecurrent == GERA_MACA_INICIAL) ? 1'b1 : 1'b0;
+        render_clr                  = (Ecurrent == IDLE || Ecurrent == ESPERA || Ecurrent == COMPARA || Ecurrent == VERIFICA_MACA) ? 1'b1 : 1'b0;
+        render_count                = (Ecurrent == PROXIMO_RENDER || Ecurrent == CONTASELF) ? 1'b1 : 1'b0;
+        register_apple              = (Ecurrent == GERA_MACA || Ecurrent == GERA_MACA_INICIAL) ? 1'b1 : 1'b0;
+        reset_apple                 = (Ecurrent == IDLE || Ecurrent == PREPARA);
+        register_head               = (Ecurrent == REGISTRA) ? 1'b1 : 1'b0;
+        reset_head                  = (Ecurrent == IDLE);
+        finished                    = (Ecurrent == GANHOU || Ecurrent == PERDEU) ? 1'b1 : 1'b0;
+        won                         = (Ecurrent == GANHOU) ? 1'b1 : 1'b0;
+        lost                        = (Ecurrent == PERDEU) ? 1'b1 : 1'b0;
+        count_play_time             = (Ecurrent == ESPERA) ? 1'b1 : 1'b0;
+        we_ram                      = (Ecurrent == WriteRAM|| Ecurrent == FEZ_NADA) ? 1'b1 : 1'b0;
+        mux_ram                     = (Ecurrent == ContaRAM || Ecurrent == MOVE || Ecurrent == WriteRAM || Ecurrent == ComparaRAM) ? 1'b1 : 1'b0;
+        load_ram                    = (Ecurrent == REGISTRA) ? 1'b1 : 1'b0;
+        counter_ram                 = (Ecurrent == ContaRAM) ? 1'b1 : 1'b0;
+        mux_ram_addres              = (Ecurrent == WriteRAM) ? 1'b1 : 1'b0;
+        mux_ram_render              = (Ecurrent == ContaRAM || Ecurrent == MOVE || Ecurrent == WriteRAM || Ecurrent == ComparaRAM) ? 1'b1 : 1'b0;
+        zera_counter_play_time      = (Ecurrent == PAUSOU) ? 1'b1 : 1'b0;
+        register_game_parameters    = (Ecurrent == PREPARA) ? 1'b1 : 1'b0;
+        reset_game_parameters       = (Ecurrent == IDLE) ? 1'b1 : 1'b0;
 
 
         if (restart) begin                      
         direction <= 2'b00;                    
         end else begin
             if (Ecurrent == ESPERA) begin
-                if (left && direction != 2'b00)  
-                    direction <= 2'b01;                   
-                else if (up && direction != 2'b10)     
-                    direction <= 2'b11;                     
-                else if (down && direction != 2'b11)     
-                    direction <= 2'b10;                   
-                else if (right && direction != 2'b01)  
-                    direction <= 2'b00;      
+                if(played) begin
+                    if (left && direction != 2'b00)  
+                        direction <= 2'b01;                   
+                    else if (up && direction != 2'b10)     
+                        direction <= 2'b11;                     
+                    else if (down && direction != 2'b11)     
+                        direction <= 2'b10;                   
+                    else if (right && direction != 2'b01)  
+                        direction <= 2'b00;      
+                    else
+                        direction <= direction;
+                end
                 else
                     direction <= direction;
             end

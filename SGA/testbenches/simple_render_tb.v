@@ -58,7 +58,10 @@ module simple_render_tb;
         .won(),
         .lost(),
         .direction(),
-        .db_size(db_size)
+        .db_size(db_size),
+        .mode(1'b0), // 0 sem parede // 1 com parede
+        .difficulty(1'b0), // 0 easy // 1 dificil
+        .velocity(1'b0) // 0 para 400ms // 1 para 200ms
     );
 
     // geracao dos sinais de entrada (estimulos)
@@ -94,9 +97,6 @@ module simple_render_tb;
       #(clockPeriod);
       start_in = 0;
 
-      buttons_in = 4'b0001;
-      #(10*clockPeriod);
-      buttons_in = 4'b0000;
       #(100*clockPeriod);
       buttons_in = 4'b1000;
       #(10*clockPeriod);

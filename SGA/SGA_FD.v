@@ -6,8 +6,9 @@
  *
  * --------------------------------------------------------------------
  * Revisoes  :
- *     Data        Versao  Autor                            Descricao
- *     09/03/2024  1.0     Erick Sousa, João Bassetti       versao inicial
+ *     Data        Versao  Autor                                          Descricao
+ *     09/03/2024  1.0     Erick Sousa, João Bassetti                   versao inicial
+ *     13/03/2024  1.1     Erick Sousa, João Bassetti, Carlos Engler       Semana 2
  * --------------------------------------------------------------------
 */
 
@@ -34,6 +35,11 @@ module SGA_FD (
     input         mux_ram_addres,
     input         mux_ram_render,
     input         zera_counter_play_time,
+    input         mode,
+    input         difficulty,
+    input         velocity,
+    input         register_game_parameters,
+    input         reset_game_parameters,
     output        self_collision_on,
     output        self_collision,
     output        render_finish,
@@ -43,9 +49,9 @@ module SGA_FD (
     output [3:0]  db_macas_comidas,
     output [3:0]  db_memoria,
     output [35:0] db_leds,
-    output end_play_time,
+    output chosen_play_time,
     output end_move,
-    output win_game,
+    output chosen_difficulty,
     output played,
     output wall_collision,
 	  output comeu_maca
@@ -67,22 +73,33 @@ module SGA_FD (
     wire [3:0] dataRAM;
     wire [3:0] addresRAM;
     wire [3:0] renderRAM;
+    wire w_end_play_time;
+    wire w_end_play_time_half;
+    wire w_win_game;
+    wire w_win_easy_game;
     wire w_self_collision_on_1;
     wire w_self_collision_on_2;
+    wire w_dificuldade;
+    wire w_mode;
+    wire w_velocity;
+    wire w_wall_collision;
 
 
-    assign sinal = buttons[0] | buttons [1] | buttons[2] | buttons [3];   
-
+    assign sinal = buttons[0] | buttons [1] | buttons[2] | buttons [3];  
+    assign chosen_play_time = !w_velocity ? w_end_play_time : w_end_play_time_half;
+    assign chosen_difficulty = w_dificuldade ? w_win_game : w_win_easy_game;
+    
     // contador_163
     contador_163 snake_size (
-      .clock( clock ),
-      .clr  ( ~clear_size ), 
-      .ld   ( ~load_size ),
-      .enp  ( count_size ),
-      .ent  ( 1'b1 ),
-      .D    ( 4'b0001 ), 
-      .Q    ( s_size ),
-      .rco  ( win_game )
+      .clock    ( clock ),
+      .clr      ( ~clear_size ), 
+      .ld       ( ~load_size ),
+      .enp      ( count_size ),
+      .ent      ( 1'b1 ),
+      .D        ( 4'b0001 ), 
+      .Q        ( s_size ),
+      .rco      ( w_win_game ),
+      .half_rco ( w_win_easy_game)
     );
 
     contador_163 render_component (
@@ -93,7 +110,8 @@ module SGA_FD (
       .ent  ( 1'b1 ),
       .D    ( 4'd0 ), 
       .Q    ( s_render_count ),
-      .rco  (  )
+      .rco  (  ),
+      .half_rco ( )
     );
 
     contador_negativo163 ram_counter (
@@ -113,14 +131,14 @@ module SGA_FD (
       .out(w_new_apple)
     );
 
-    	 contador_m #( .M(400), .N(13) ) contador_de_jogada (
+    contador_m #( .M(400), .N(13) ) contador_de_jogada (
       .clock  ( clock ),
       .zera_as( restart ),
       .zera_s ( render_count | zera_counter_play_time ),
       .conta  ( count_play_time ),
       .Q      (  ),
-      .fim    ( end_play_time ),
-      .meio   (),
+      .fim    ( w_end_play_time ),
+      .meio   ( w_end_play_time_half ),
       .quarto ()
     );
 
@@ -138,6 +156,30 @@ module SGA_FD (
         .enable ( register_head ),
         .D ( s_position ),
         .Q ( head )
+    );
+
+    registrador_1 game_mode (
+        .clock ( clock ),
+        .clear ( reset_game_parameters ),
+        .enable ( register_game_parameters ),
+        .D ( mode ),
+        .Q ( w_mode )
+    );
+    
+    registrador_1 dificuldade (
+        .clock ( clock ),
+        .clear ( reset_game_parameters ),
+        .enable ( register_game_parameters ),
+        .D ( difficulty ),
+        .Q ( w_dificuldade )
+    );
+
+    registrador_1 velocidade (
+        .clock ( clock ),
+        .clear ( reset_game_parameters ),
+        .enable ( register_game_parameters ),
+        .D ( velocity ),
+        .Q ( w_velocity )
     );
 
     edge_detector detector (
@@ -219,8 +261,10 @@ module SGA_FD (
       .clock(clock),
       .direction(direction),
       .reset(restart),
-      .colide( wall_collision )
+      .colide( w_wall_collision )
     );
+
+    assign wall_collision = w_wall_collision & w_mode;
 
     assign  dataRAM = mux_ram ? s_position : newHead;
     assign  addresRAM = mux_ram_addres ? (s_address + 4'b0001): s_address;

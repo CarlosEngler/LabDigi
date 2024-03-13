@@ -6,8 +6,9 @@
  *
  * --------------------------------------------------------------------
  * Revisoes  :
- *     Data        Versao  Autor                          Descricao
- *     08/03/2024  1.0     Erick Sousa, João Bassetti     versao inicial
+ *     Data        Versao  Autor                                          Descricao
+ *     08/03/2024  1.0     Erick Sousa, João Bassetti                   versao inicial
+*     13/03/2024  1.0     Erick Sousa, João Bassetti, Carlos Engler       Semana 2
  * --------------------------------------------------------------------
 */
 
@@ -18,6 +19,9 @@ module SGA (
  input          start,
  input          restart,
  input          pause,
+ input          difficulty,
+ input          mode,
+ input          velocity,
  output         [3:0] db_size, 
  output         [6:0] db_state,
  output         [6:0] db_state2,
@@ -42,7 +46,7 @@ wire w_register_head;
 wire w_reset_head;
 wire w_load_size;
 wire w_count_play_time;
-wire w_end_play_time;
+wire w_chosen_play_time;
 wire w_played;
 wire [1:0] w_direction;
 wire w_we_ram;
@@ -67,11 +71,16 @@ wire w_comeu_maca;
 wire w_self_collision_on;
 wire w_self_collision;
 wire w_zera_counter_play_time;
+wire w_register_game_parameters;
+wire w_reset_game_parameters;
 
 	SGA_FD FD(
         .clock(clock),
         .buttons(buttons),
         .restart(restart),
+        .mode(mode),
+        .difficulty(difficulty),
+        .velocity(velocity),
         .clear_size(w_clr_size),
         .count_size(w_count_size),
         .render_clr(w_render_clr),
@@ -92,7 +101,7 @@ wire w_zera_counter_play_time;
         .played(w_played),
         .we_ram(w_we_ram),
         .mux_ram(w_mux_ram),
-        .end_play_time(w_end_play_time),
+        .chosen_play_time(w_chosen_play_time),
         .direction(w_direction),
         .load_ram(w_load_ram),
         .counter_ram(w_counter_ram),
@@ -103,8 +112,10 @@ wire w_zera_counter_play_time;
         .wall_collision(w_wall_collision),
         .self_collision(w_self_collision),
         .self_collision_on(w_self_collision_on),
-        .win_game(w_win_game),
+        .chosen_difficulty(w_win_game),
         .zera_counter_play_time(w_zera_counter_play_time),
+        .register_game_parameters(w_register_game_parameters),
+        .reset_game_parameters(w_reset_game_parameters),
         .recharge(w_recharge)
     );
 
@@ -112,7 +123,7 @@ wire w_zera_counter_play_time;
         .clock(clock),
         .restart(restart), 
         .start(start),
-        .end_play_time(w_end_play_time),
+        .chosen_play_time(w_chosen_play_time),
         .clear_size(w_clr_size),
         .count_size(w_count_size),
         .render_clr(w_render_clr),
@@ -148,6 +159,8 @@ wire w_zera_counter_play_time;
         .win_game(w_win_game),
         .pause(pause),
         .zera_counter_play_time(w_zera_counter_play_time),
+        .register_game_parameters(w_register_game_parameters),
+        .reset_game_parameters(w_reset_game_parameters),
         .recharge(w_recharge)
     );
 	 
