@@ -22,7 +22,7 @@ module sync_ram_16x4_file #(
 (
     input        clk,
     input        we,
-	 input        restart,
+	input        restart,
     input  [3:0] data,
     input  [3:0] addr,
     output [3:0] q,
@@ -42,7 +42,7 @@ module sync_ram_16x4_file #(
     begin
 	 if(restart) begin
 		  ram[0] <= 4'b0110;
-        ram[1] <= 4'b0101;
+          ram[1] <= 4'b0101;
 	 end else begin
 		 if (we)
 				ram[addr] <= data;

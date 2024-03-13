@@ -1,19 +1,21 @@
 module LFSR (
-    input clk,
-    input reset,
-    output [3:0] lfsr_output
-);
+    input clk, 
+    input rst, 
+    output reg [3:0] out);
 
-reg [3:0] lfsr_register;
+  wire feedback;
 
-always @(posedge clk or posedge reset)
-begin
-    if (reset)
-        lfsr_register <= 4'b0001;
+  assign feedback = ~(out[3] ^ out[2]);
+
+always @(posedge clk, posedge rst)
+  begin
+    if (rst)
+      out = 4'b0;
+    else if (out == 4'b1000)
+      out = 4'b1111;
+    else if (out == 4'b1111)
+      out = 4'b0000;
     else
-        lfsr_register <= {lfsr_register[2:0], lfsr_register[3] ^ lfsr_register[1]};
-end
-
-assign lfsr_output = lfsr_register;
-
+      out = {out[2:0],feedback};
+  end
 endmodule

@@ -33,6 +33,9 @@ module SGA_FD (
     input         counter_ram,
     input         mux_ram_addres,
     input         mux_ram_render,
+    input         zera_counter_play_time,
+    output        self_collision_on,
+    output        self_collision,
     output        render_finish,
     output [3:0]  db_tamanho,
     output [3:0]  db_apple,
@@ -42,8 +45,10 @@ module SGA_FD (
     output [35:0] db_leds,
     output end_play_time,
     output end_move,
+    output win_game,
     output played,
-	 output comeu_maca
+    output wall_collision,
+	  output comeu_maca
 );
 
 	  wire [3:0] s_size;
@@ -62,6 +67,8 @@ module SGA_FD (
     wire [3:0] dataRAM;
     wire [3:0] addresRAM;
     wire [3:0] renderRAM;
+    wire w_self_collision_on_1;
+    wire w_self_collision_on_2;
 
 
     assign sinal = buttons[0] | buttons [1] | buttons[2] | buttons [3];   
@@ -75,7 +82,7 @@ module SGA_FD (
       .ent  ( 1'b1 ),
       .D    ( 4'b0001 ), 
       .Q    ( s_size ),
-      .rco  (  )
+      .rco  ( win_game )
     );
 
     contador_163 render_component (
@@ -102,14 +109,14 @@ module SGA_FD (
 
     LFSR new_apple(
       .clk(clock),
-      .reset(restart),
-      .lfsr_output(w_new_apple)
+      .rst(restart),
+      .out(w_new_apple)
     );
 
     	 contador_m #( .M(400), .N(13) ) contador_de_jogada (
       .clock  ( clock ),
       .zera_as( restart ),
-      .zera_s ( render_count ),
+      .zera_s ( render_count | zera_counter_play_time ),
       .conta  ( count_play_time ),
       .Q      (  ),
       .fim    ( end_play_time ),
@@ -134,10 +141,10 @@ module SGA_FD (
     );
 
     edge_detector detector (
-      .clock(clock),
-      .reset(restart),
-      .sinal(sinal),
-      .pulso(played)
+      .clock( clock ),
+      .reset( restart ),
+      .sinal( sinal ),
+      .pulso( played )
     );
 	 
 	 // comparador_85
@@ -165,7 +172,7 @@ module SGA_FD (
 	 
 	 comparador_85 comparador_comeu_maca (
       .A   ( s_apple ),
-      .B   ( head ),
+      .B   ( newHead ),
       .ALBi( 1'b0 ), 
       .AGBi( 1'b0 ),
       .AEBi( 1'b1 ),
@@ -174,12 +181,45 @@ module SGA_FD (
       .AEBo( comeu_maca )
     );
 
+    comparador_85 comparator_self_collision_on (
+      .A   ( 4'b0100 ),
+      .B   ( s_size ),
+      .ALBi( 1'b0 ), 
+      .AGBi( 1'b0 ),
+      .AEBi( 1'b1 ),
+      .ALBo( w_self_collision_on_2), 
+      .AGBo(  ),
+      .AEBo( w_self_collision_on_1 )
+    );
+
+    assign self_collision_on = w_self_collision_on_1 | w_self_collision_on_2;
+
+    comparador_85 comparator_self_collision (
+      .A   ( head ),
+      .B   ( s_position ),
+      .ALBi( 1'b0 ), 
+      .AGBi( 1'b0 ),
+      .AEBi( 1'b1 ),
+      .ALBo( ), 
+      .AGBo( ),
+      .AEBo( self_collision )
+    );
+
     matrizleds game_interface (
         .clock( clock ),
         .apple( s_apple ),
         .position ( s_position ),
         .leds( db_leds ),
         .restart( recharge | restart )
+    );
+
+    wall_coliser detector_collision
+    (
+      .head(s_position),
+      .clock(clock),
+      .direction(direction),
+      .reset(restart),
+      .colide( wall_collision )
     );
 
     assign  dataRAM = mux_ram ? s_position : newHead;
@@ -196,7 +236,7 @@ module SGA_FD (
 			.addr( renderRAM ),
 			.q( s_position ),
       .head( db_head ),
-		.restart(restart)
+		  .restart(restart)
     );
 
     assign headXsoma = {head[3:2] , head[1:0] + 2'b01} ;

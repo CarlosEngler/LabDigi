@@ -47,6 +47,7 @@ module simple_render_tb;
         .buttons(buttons_in),
         .start(start_in),
         .restart(restart_in),
+        .pause(pause_in),
         .db_state(db_state),
         .db_state2(db_state2),
         .db_appleX(),
@@ -54,6 +55,9 @@ module simple_render_tb;
         .db_headX(),
         .db_headY(),
         .leds(),
+        .won(),
+        .lost(),
+        .direction(),
         .db_size(db_size)
     );
 
@@ -90,11 +94,22 @@ module simple_render_tb;
       #(clockPeriod);
       start_in = 0;
 
-      #(500*clockPeriod);
-
       buttons_in = 4'b0001;
-
+      #(10*clockPeriod);
+      buttons_in = 4'b0000;
       #(100*clockPeriod);
+      buttons_in = 4'b1000;
+      #(10*clockPeriod);
+      buttons_in = 4'b0000;
+      #(450*clockPeriod);
+      buttons_in = 4'b0010;
+      #(10*clockPeriod);
+      buttons_in = 4'b0000;
+      #(650*clockPeriod);
+      buttons_in = 4'b0100;
+      #(10*clockPeriod);
+      buttons_in = 4'b0000;
+      #(650*clockPeriod);
 
       // Teste 4 (manter chaves em 0100 por 1 periodo de clock)
 

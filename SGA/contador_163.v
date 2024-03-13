@@ -26,6 +26,6 @@ module contador_163 ( clock, clr, ld, ent, enp, D, Q, rco );
         else                    Q <= Q;
  
     always @ (Q or ent)
-        if (ent && (Q == 4'd15))   rco = 1;
+        if (ent && (Q == 4'd14))   rco = 1;
         else                       rco = 0;
 endmodule

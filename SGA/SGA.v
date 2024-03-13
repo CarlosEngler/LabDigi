@@ -17,6 +17,7 @@ module SGA (
  input          [3:0] buttons,
  input          start,
  input          restart,
+ input          pause,
  output         [3:0] db_size, 
  output         [6:0] db_state,
  output         [6:0] db_state2,
@@ -25,6 +26,8 @@ module SGA (
  output         [6:0] db_appleX,
  output         [6:0] db_appleY,
  output         [1:0] direction,
+ output         won,
+ output         lost,
  output         [3:0] leds
  );
 
@@ -45,6 +48,8 @@ wire [1:0] w_direction;
 wire w_we_ram;
 wire w_mux_ram;
 wire w_recharge;
+wire w_wall_collision;
+wire w_win_game;
 
 wire [3:0] s_contagem;
 wire [3:0] s_chaves;
@@ -59,6 +64,9 @@ wire w_mux_ram_addres;
 wire w_mux_ram_render;
 wire w_end_move;
 wire w_comeu_maca;
+wire w_self_collision_on;
+wire w_self_collision;
+wire w_zera_counter_play_time;
 
 	SGA_FD FD(
         .clock(clock),
@@ -91,7 +99,12 @@ wire w_comeu_maca;
         .mux_ram_addres(w_mux_ram_addres),
         .mux_ram_render(w_mux_ram_render),
         .end_move(w_end_move),
-		  .comeu_maca(w_comeu_maca),
+		.comeu_maca(w_comeu_maca),
+        .wall_collision(w_wall_collision),
+        .self_collision(w_self_collision),
+        .self_collision_on(w_self_collision_on),
+        .win_game(w_win_game),
+        .zera_counter_play_time(w_zera_counter_play_time),
         .recharge(w_recharge)
     );
 
@@ -99,10 +112,6 @@ wire w_comeu_maca;
         .clock(clock),
         .restart(restart), 
         .start(start),
-        .pause(pause),
-        .is_at_apple(1'b0),
-        .is_at_border(1'b0),
-        .is_at_body(1'b0),
         .end_play_time(w_end_play_time),
         .clear_size(w_clr_size),
         .count_size(w_count_size),
@@ -132,7 +141,13 @@ wire w_comeu_maca;
         .mux_ram_addres(w_mux_ram_addres),
         .mux_ram_render(w_mux_ram_render),
         .end_move(w_end_move),
-		  .comeu_maca(w_comeu_maca),
+        .wall_collision(w_wall_collision),
+		.comeu_maca(w_comeu_maca),
+        .self_collision(w_self_collision),
+        .self_collision_on(w_self_collision_on),
+        .win_game(w_win_game),
+        .pause(pause),
+        .zera_counter_play_time(w_zera_counter_play_time),
         .recharge(w_recharge)
     );
 	 
