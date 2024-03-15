@@ -59,7 +59,7 @@ module simple_render_tb;
         .lost(),
         .direction(),
         .db_size(db_size),
-        .mode(1'b0), // 0 sem parede // 1 com parede
+        .mode(1'b1), // 0 sem parede // 1 com parede
         .difficulty(1'b0), // 0 easy // 1 dificil
         .velocity(1'b0) // 0 para 400ms // 1 para 200ms
     );
@@ -101,15 +101,7 @@ module simple_render_tb;
       buttons_in = 4'b1000;
       #(10*clockPeriod);
       buttons_in = 4'b0000;
-      #(450*clockPeriod);
-      buttons_in = 4'b0010;
-      #(10*clockPeriod);
-      buttons_in = 4'b0000;
-      #(650*clockPeriod);
-      buttons_in = 4'b0100;
-      #(10*clockPeriod);
-      buttons_in = 4'b0000;
-      #(650*clockPeriod);
+      #(1050*clockPeriod);
 
       // Teste 4 (manter chaves em 0100 por 1 periodo de clock)
 

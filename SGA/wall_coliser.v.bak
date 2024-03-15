@@ -14,7 +14,7 @@ module wall_coliser
     // parameter          DOWN  = 2'b10,
     // parameter          RIGHT = 2'b00;
 
-always @ (head) begin
+always @(posedge clock or posedge reset) begin
     if (reset) begin
       colide <= 0;
     end else if (clock) begin
