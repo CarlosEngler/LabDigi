@@ -1,6 +1,7 @@
 module LFSR (
     input clk, 
     input rst, 
+    input [3:0] apple,
     output reg [3:0] out);
 
   wire feedback;

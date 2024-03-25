@@ -27,6 +27,7 @@ module SGA_UC (
 	input      comeu_maca,
     input      wall_collision,
     input      win_game,
+    input      maca_na_cobra,
     input      self_collision_on,
     input      self_collision,
     output reg load_size,
@@ -81,6 +82,10 @@ module SGA_UC (
     parameter COMPARASELF               = 5'b10101;  // l
     parameter CONTASELF                 = 5'b10110;  // m
     parameter ATUALIZA_MEMORIASELF      = 5'b10111;  // n
+    parameter COMPARAMACA               = 5'b11000;  // o
+    parameter CONTAMACA                 = 5'b11001;  // p
+    parameter ATUALIZA_MEMORIAMACA      = 5'b11010;  // q
+    parameter ZERA_CONTAGEMMACA         = 5'b11011;  // r
 
     // direções
     // parameter          LEFT  = 2'b01,
@@ -108,7 +113,7 @@ module SGA_UC (
             RENDERIZA:              Enext = render_finish ? ESPERA : PROXIMO_RENDER;
             PROXIMO_RENDER:         Enext = ATUALIZA_MEMORIA;
             ATUALIZA_MEMORIA:       Enext = RENDERIZA;
-            ESPERA:                 Enext = pause ? PAUSOU : ((chosen_play_time | played) ? REGISTRA : ESPERA);
+            ESPERA:                 Enext = pause ? PAUSOU : (chosen_play_time ? REGISTRA : ESPERA);
             REGISTRA:               Enext = COMPARA;
             COMPARA:                Enext = !wall_collision ? (self_collision_on ? CONTASELF : VERIFICA_MACA) : PERDEU;
             COMPARASELF:            Enext = !self_collision ? (render_finish ? VERIFICA_MACA : CONTASELF) : PERDEU;
@@ -116,7 +121,11 @@ module SGA_UC (
             ATUALIZA_MEMORIASELF:   Enext = COMPARASELF;
 			VERIFICA_MACA:          Enext = !comeu_maca ? MOVE : (win_game ? GANHOU : CRESCE);
 			CRESCE:                 Enext = GERA_MACA;
-			GERA_MACA:              Enext = MOVE;
+			GERA_MACA:              Enext = ZERA_CONTAGEMMACA;
+            ZERA_CONTAGEMMACA:      Enext = COMPARAMACA;
+            COMPARAMACA:            Enext = maca_na_cobra ? GERA_MACA : (render_finish ? MOVE : CONTAMACA);
+            CONTAMACA:              Enext = ATUALIZA_MEMORIAMACA;
+            ATUALIZA_MEMORIAMACA:   Enext = COMPARAMACA;
             MOVE:                   Enext = WriteRAM;
             WriteRAM:               Enext = ComparaRAM;
             ComparaRAM:             Enext = end_move ? FEZ_NADA : ContaRAM;
@@ -136,8 +145,8 @@ module SGA_UC (
         clear_size                  = (Ecurrent == IDLE) ? 1'b1 : 1'b0;
         count_size                  = (Ecurrent == CRESCE) ? 1'b1 : 1'b0;
         recharge                    = (Ecurrent == RESETMATRIZ || Ecurrent == IDLE || Ecurrent == PREPARA || Ecurrent == GERA_MACA_INICIAL) ? 1'b1 : 1'b0;
-        render_clr                  = (Ecurrent == IDLE || Ecurrent == ESPERA || Ecurrent == COMPARA || Ecurrent == VERIFICA_MACA) ? 1'b1 : 1'b0;
-        render_count                = (Ecurrent == PROXIMO_RENDER || Ecurrent == CONTASELF) ? 1'b1 : 1'b0;
+        render_clr                  = (Ecurrent == IDLE || Ecurrent == ESPERA || Ecurrent == COMPARA || Ecurrent == VERIFICA_MACA || Ecurrent == RESETMATRIZ || Ecurrent == MOVE || Ecurrent == GERA_MACA) ? 1'b1 : 1'b0;
+        render_count                = (Ecurrent == PROXIMO_RENDER || Ecurrent == CONTASELF || Ecurrent == CONTAMACA) ? 1'b1 : 1'b0;
         register_apple              = (Ecurrent == GERA_MACA || Ecurrent == GERA_MACA_INICIAL) ? 1'b1 : 1'b0;
         reset_apple                 = (Ecurrent == IDLE || Ecurrent == PREPARA);
         register_head               = (Ecurrent == REGISTRA) ? 1'b1 : 1'b0;
@@ -160,25 +169,15 @@ module SGA_UC (
         if (restart) begin                      
         direction <= 2'b00;                    
         end else begin
-            if (Ecurrent == ESPERA) begin
-                if(played) begin
-                    if (left && direction != 2'b00)  
-                        direction <= 2'b01;                   
-                    else if (up && direction != 2'b10)     
-                        direction <= 2'b11;                     
-                    else if (down && direction != 2'b11)     
-                        direction <= 2'b10;                   
-                    else if (right && direction != 2'b01)  
-                        direction <= 2'b00;      
-                    else
-                        direction <= direction;
-                end
-                else
-                    direction <= direction;
-            end
-            else
-                direction <= direction;
-        end
+				  if (left && direction != 2'b00 && Ecurrent != PAUSOU)  
+						direction <= 2'b01;                   
+				  if (up && direction != 2'b10 && Ecurrent != PAUSOU)     
+						direction <= 2'b11;                     
+				  if (down && direction != 2'b11 && Ecurrent != PAUSOU)     
+						direction <= 2'b10;                   
+				  if (right && direction != 2'b01 && Ecurrent != PAUSOU)  
+						direction <= 2'b00;
+				end
         
         // Saida de depuracao (estado)
         case (Ecurrent)
@@ -206,6 +205,10 @@ module SGA_UC (
             COMPARASELF                : db_state = 5'b10101;  // l
             CONTASELF                  : db_state = 5'b10110;  // m
             ATUALIZA_MEMORIASELF       : db_state = 5'b10111;  // n
+            COMPARAMACA                : db_state = 5'b11000;  // o
+            CONTAMACA                  : db_state = 5'b11001;  // p
+            ATUALIZA_MEMORIAMACA       : db_state = 5'b11010;  // q
+            ZERA_CONTAGEMMACA          : db_state = 5'b11011;  // r
             default                    : db_state = 5'b00000;  // 0
         endcase
     end

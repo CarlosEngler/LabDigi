@@ -32,8 +32,10 @@ module SGA (
  output         [1:0] direction,
  output         won,
  output         lost,
- output         [3:0] leds
- );
+ output         [3:0] leds,
+ output			 comeu_maca,
+ output         led_comeu_maca
+);
 
 wire w_clr_size;
 wire w_count_size;
@@ -54,6 +56,7 @@ wire w_mux_ram;
 wire w_recharge;
 wire w_wall_collision;
 wire w_win_game;
+wire w_maca_na_cobra;
 
 wire [3:0] s_contagem;
 wire [3:0] s_chaves;
@@ -116,6 +119,7 @@ wire w_reset_game_parameters;
         .zera_counter_play_time(w_zera_counter_play_time),
         .register_game_parameters(w_register_game_parameters),
         .reset_game_parameters(w_reset_game_parameters),
+        .maca_na_cobra(w_maca_na_cobra),
         .recharge(w_recharge)
     );
 
@@ -142,9 +146,9 @@ wire w_reset_game_parameters;
         .count_play_time(w_count_play_time),
         .db_state(s_estado),
         .left(buttons[3]),
-        .right(buttons[2]),
-        .up(buttons[1]),
-        .down(buttons[0]),
+        .right(buttons[0]),
+        .up(buttons[2]),
+        .down(buttons[1]),
         .played(w_played),
         .direction(w_direction),
         .load_ram(w_load_ram),
@@ -161,6 +165,7 @@ wire w_reset_game_parameters;
         .zera_counter_play_time(w_zera_counter_play_time),
         .register_game_parameters(w_register_game_parameters),
         .reset_game_parameters(w_reset_game_parameters),
+        .maca_na_cobra(w_maca_na_cobra),
         .recharge(w_recharge)
     );
 	 
@@ -190,5 +195,7 @@ wire w_reset_game_parameters;
 
 assign direction = w_direction;
 assign leds = buttons;
+assign comeu_maca = s_head[1];
+assign led_comeu_maca = w_comeu_maca;
 
 endmodule

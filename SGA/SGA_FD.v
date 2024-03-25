@@ -54,6 +54,7 @@ module SGA_FD (
     output chosen_difficulty,
     output played,
     output wall_collision,
+    output maca_na_cobra,
 	  output comeu_maca
 );
 
@@ -81,6 +82,7 @@ module SGA_FD (
     wire w_self_collision_on_2;
     wire w_dificuldade;
     wire w_mode;
+    wire [3:0] w_apple;
     wire w_velocity;
     wire w_wall_collision;
 
@@ -221,6 +223,19 @@ module SGA_FD (
       .ALBo( ), 
       .AGBo( ),
       .AEBo( comeu_maca )
+    );
+
+    assign w_apple = render_finish ? newHead : s_position;
+
+    comparador_85 comparador_maca_na_cobra (
+      .A   ( s_apple ),
+      .B   ( w_apple ),
+      .ALBi( 1'b0 ), 
+      .AGBi( 1'b0 ),
+      .AEBi( 1'b1 ),
+      .ALBo( ), 
+      .AGBo( ),
+      .AEBo( maca_na_cobra )
     );
 
     comparador_85 comparator_self_collision_on (
