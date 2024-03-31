@@ -1,26 +1,36 @@
 module matrizleds(
-input [3:0] position,
-input [3:0] apple,
+input [5:0] position,
+input [5:0] apple,
 input clock,
 input restart,
-output reg [35:0] leds
+output reg [99:0] leds
 );
 
     initial begin
-        leds = 36'd0;
-        leds[6:0] = 7'b1111111;
-        leds[12:11] = 2'b11;
-        leds[18:17] = 2'b11;
-        leds[24:23] = 2'b11;
-        leds[35:29] = 7'b1111111;
+        leds = 100'd0;
+        leds[10:0] = 11'b11111111111;
+        leds[20:19] = 2'b11;
+        leds[30:29] = 2'b11;
+        leds[40:39] = 2'b11;
+		leds[50:49] = 2'b11;
+		leds[60:59] = 2'b11;
+		leds[70:69] = 2'b11;
+		leds[80:70] = 2'b11;
+		leds[90:89] = 2'b11;
+		leds[100:91] = 11'b11111111111;
     end
 
     always @ (clock) begin
 	     if (restart) begin
-			  leds[10:7]  <= 4'b0000;
-			  leds[16:13] <= 4'b0000;
-			  leds[22:19] <= 4'b0000;
-			  leds[28:25] <= 4'b0000;
+			  leds[10:9]  <= 8'd0;
+			  leds[16:13] <= 8'd0;
+			  leds[22:19] <= 8'd0;
+			  leds[28:25] <= 8'd0;
+			  leds[28:25] <= 8'd0;
+			  leds[28:25] <= 8'd0;
+			  leds[28:25] <= 8'd0;
+			  leds[28:25] <= 8'd0;
+			  leds[28:25] <= 8'd0;
 		  end
 		  else begin
 			  case (position)

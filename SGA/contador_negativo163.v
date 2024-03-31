@@ -15,7 +15,7 @@
 //
 module contador_negativo163 ( clock, clr, ld, ent, enp, D, Q, rco );
     input clock, clr, ld, ent, enp;
-    input [3:0] D;
+    input [5:0] D;
     output reg [3:0] Q;
     output reg rco;
 

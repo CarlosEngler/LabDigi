@@ -152,7 +152,7 @@ module SGA_UC (
         register_apple              = (Ecurrent == GERA_MACA || Ecurrent == GERA_MACA_INICIAL) ? 1'b1 : 1'b0;
         reset_apple                 = (Ecurrent == IDLE || Ecurrent == PREPARA);
         register_eat_apple          = (Ecurrent == VERIFICA_MACA) ? 1'b1 : 1'b0;
-        reset_eat_apple             = (Ecurrent == IDLE || Ecurrent == PREPARA || Ecurrent == ESPERA);
+        reset_eat_apple             = (Ecurrent == IDLE || Ecurrent == PREPARA || Ecurrent = ESPERA);
         register_head               = (Ecurrent == REGISTRA) ? 1'b1 : 1'b0;
         reset_head                  = (Ecurrent == IDLE);
         finished                    = (Ecurrent == GANHOU || Ecurrent == PERDEU) ? 1'b1 : 1'b0;
@@ -175,11 +175,11 @@ module SGA_UC (
         end else begin
 				  if (left && direction != 2'b00 && Ecurrent != PAUSOU)  
 						direction <= 2'b01;                   
-				  else if (up && direction != 2'b10 && Ecurrent != PAUSOU)     
+				  if (up && direction != 2'b10 && Ecurrent != PAUSOU)     
 						direction <= 2'b11;                     
-				  else if (down && direction != 2'b11 && Ecurrent != PAUSOU)     
+				  if (down && direction != 2'b11 && Ecurrent != PAUSOU)     
 						direction <= 2'b10;                   
-				  else if (right && direction != 2'b01 && Ecurrent != PAUSOU)  
+				  if (right && direction != 2'b01 && Ecurrent != PAUSOU)  
 						direction <= 2'b00;
 				end
         

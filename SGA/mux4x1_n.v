@@ -15,7 +15,7 @@
  */
 
 module mux4x1_n #(
-    parameter BITS = 4
+    parameter BITS = 6
 ) (
     input      [BITS-1:0] D0,
     input      [BITS-1:0] D1,

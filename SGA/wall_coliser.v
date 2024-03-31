@@ -3,7 +3,7 @@
 module wall_coliser
   (
    input          clock,
-   input          [3:0] head,
+   input          [5:0] head,
    input          [1:0] direction,
    input          reset,
    output reg     colide
@@ -19,16 +19,16 @@ always @ (head) begin
       colide <= 0;
     end else if (clock) begin
       end
-        if (head[1:0] == 2'b11 && direction == 2'b00) begin
+        if (head[2:0] == 3'b111 && direction == 2'b00) begin
           colide <= 1;
         end
-        else if (head[1:0] == 2'b00 && direction == 2'b01) begin
+        else if (head[2:0] == 3'b000 && direction == 2'b01) begin
           colide <= 1;
         end 
-        else if (head[3:2] == 2'b11 && direction == 2'b10) begin
+        else if (head[5:3] == 3'b111 && direction == 2'b10) begin
           colide <= 1;
         end 
-        else if (head[3:2] == 2'b00 && direction == 2'b11) begin
+        else if (head[5:3] == 3'b000 && direction == 2'b11) begin
           colide <= 1;
         end 
         else begin

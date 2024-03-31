@@ -33,7 +33,8 @@ module SGA (
  output         won,
  output         lost,
  output         [3:0] leds,
- output			 comeu_maca
+ output			 comeu_maca,
+ output         led_comeu_maca
 );
 
 wire w_clr_size;
@@ -198,5 +199,6 @@ wire w_reset_eat_apple;
 assign direction = w_direction;
 assign leds = buttons;
 assign comeu_maca = w_comeu_maca_esp;
+assign led_comeu_maca = w_comeu_maca;
 
 endmodule

@@ -15,7 +15,7 @@
 
 module comparador_85 (ALBi, AGBi, AEBi, A, B, ALBo, AGBo, AEBo);
 
-    input[3:0] A, B;
+    input[5:0] A, B;
     input      ALBi, AGBi, AEBi;
     output     ALBo, AGBo, AEBo;
     wire[4:0]  CSL, CSG;

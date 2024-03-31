@@ -145,7 +145,7 @@ module SGA_FD (
       .quarto ()
     );
 
-    registrador_6 apple_position (
+    registrador_4 apple_position (
         .clock ( clock ),
         .clear ( reset_apple ),
         .enable ( register_apple ),
@@ -153,7 +153,7 @@ module SGA_FD (
         .Q ( s_apple )
     );
 
-    registrador_6 head_position (
+    registrador_4 head_position (
         .clock ( clock ),
         .clear ( reset_head ),
         .enable ( register_head ),
@@ -309,7 +309,7 @@ module SGA_FD (
 
     assign headXsoma = {head[5:3] , head[2:0] + 3'b001} ;
     assign headXsubtrai = {head[5:3], head[2:0] - 3'b001} ;
-    assign headYSoma = {head[5:3] + 3'b001 , head[2:0]} ;
+    assign headYSoma = {head[3:5] + 3'b001 , head[2:0]} ;
     assign headYSubtrai = {head[5:3] - 3'b001 , head[2:0]} ;
 
     mux4x1_n #( .BITS(6) ) mux_zera (
