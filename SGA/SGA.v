@@ -8,7 +8,7 @@
  * Revisoes  :
  *     Data        Versao  Autor                                          Descricao
  *     08/03/2024  1.0     Erick Sousa, João Bassetti                   versao inicial
- *     13/03/2024  1.0     Erick Sousa, João Bassetti, Carlos Engler       Semana 2
+ *     13/03/2024  1.0     Erick Sousa, João Bassetti, Carlos Engler    Semana 2
  * --------------------------------------------------------------------
 */
 
@@ -33,7 +33,13 @@ module SGA (
  output         won,
  output         lost,
  output         [3:0] leds,
- output			 comeu_maca
+ output			 comeu_maca,
+ output 			[5:0] head,
+ output        [5:0] apple,
+ output        [4:0] state ,
+ output        difficulty_out,
+ output        mode_out,
+ output        velocity_out
 );
 
 wire w_clr_size;
@@ -47,6 +53,7 @@ wire w_register_head;
 wire w_reset_head;
 wire w_load_size;
 wire w_count_play_time;
+wire w_count_wait_time;
 wire w_chosen_play_time;
 wire w_played;
 wire [1:0] w_direction;
@@ -75,11 +82,16 @@ wire w_reset_game_parameters;
 wire w_comeu_maca_esp;
 wire w_register_eat_apple;
 wire w_reset_eat_apple;
+wire w_end_wait_time;
+wire w_reset_value;
+wire w_clr_apple_counter;
+wire w_mux_apple;
+wire w_count_apple_counter;
 
 	SGA_FD FD(
         .clock(clock),
         .buttons(buttons),
-        .restart(restart),
+        .restart(restart | w_reset_value),
         .mode(mode),
         .difficulty(difficulty),
         .velocity(velocity),
@@ -90,12 +102,16 @@ wire w_reset_eat_apple;
         .render_finish(w_render_finish),
         .register_apple(w_register_apple),
         .reset_apple(w_reset_apple),
+        .clr_apple_counter(w_clr_apple_counter),
+        .mux_apple(w_mux_apple),
+        .count_apple_counter(w_count_apple_counter),
         .register_eat_apple(w_register_eat_apple),
         .reset_eat_apple(w_reset_eat_apple),
         .register_head(w_register_head),
         .reset_head(w_reset_head),
         .db_tamanho(db_size),
         .db_leds( ),
+		  .count_wait_time(w_count_wait_time),
         .load_size(w_load_size),
         .db_apple(s_apple),
         .db_head(s_head),
@@ -104,6 +120,7 @@ wire w_reset_eat_apple;
         .we_ram(w_we_ram),
         .mux_ram(w_mux_ram),
         .chosen_play_time(w_chosen_play_time),
+		.end_wait_time(w_end_wait_time),
         .direction(w_direction),
         .load_ram(w_load_ram),
         .counter_ram(w_counter_ram),
@@ -138,8 +155,12 @@ wire w_reset_eat_apple;
         .register_head(w_register_head),
         .reset_head(w_reset_head),
         .finished(finished),
+        .clr_apple_counter(w_clr_apple_counter),
+        .mux_apple(w_mux_apple),
+        .count_apple_counter(w_count_apple_counter),
         .won(won),
         .we_ram(w_we_ram),
+		.count_wait_time(w_count_wait_time),
         .mux_ram(w_mux_ram),
         .lost(lost), 
         .load_size(w_load_size),
@@ -151,6 +172,7 @@ wire w_reset_eat_apple;
         .down(buttons[1]),
         .played(w_played),
         .direction(w_direction),
+		  .end_wait_time(w_end_wait_time),
         .load_ram(w_load_ram),
         .counter_ram(w_counter_ram),
         .mux_ram_addres(w_mux_ram_addres),
@@ -168,6 +190,7 @@ wire w_reset_eat_apple;
         .maca_na_cobra(w_maca_na_cobra),
         .register_eat_apple(w_register_eat_apple),
         .reset_eat_apple(w_reset_eat_apple),
+		  .reset_value(w_reset_value),
         .recharge(w_recharge)
     );
 	 
@@ -197,6 +220,12 @@ wire w_reset_eat_apple;
 
 assign direction = w_direction;
 assign leds = buttons;
+assign head = s_head;
+assign state = s_estado;
+assign apple = s_apple;
 assign comeu_maca = w_comeu_maca_esp;
+assign difficulty_out = difficulty;
+assign velocity_out = velocity;
+assign mode_out = mode;
 
 endmodule

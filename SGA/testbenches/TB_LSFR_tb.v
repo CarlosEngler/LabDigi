@@ -1,6 +1,6 @@
 module TB_LFSR;
   reg clk, reset;
-  wire [3:0] lfsr_output;
+  wire [5:0] lfsr_output;
   
   LFSR lfsr1(clk, reset, lfsr_output);
   
@@ -8,7 +8,7 @@ module TB_LFSR;
     $monitor("lfsr_output=%b",lfsr_output);
     clk = 0; reset = 1;
     #5 reset = 0;
-    #100; $finish;
+    #200; $finish;
   end
   
   always #2 clk=~clk;

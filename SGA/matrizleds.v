@@ -1,4 +1,5 @@
-module matrizleds(
+module matrizleds
+(
 input [5:0] position,
 input [5:0] apple,
 input clock,
@@ -17,7 +18,7 @@ output reg [99:0] leds
 		leds[70:69] = 2'b11;
 		leds[80:70] = 2'b11;
 		leds[90:89] = 2'b11;
-		leds[100:91] = 11'b11111111111;
+		leds[99:91] = 11'b11111111111;
     end
 
     always @ (clock) begin

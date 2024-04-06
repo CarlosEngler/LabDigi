@@ -101,7 +101,7 @@ module simple_render_tb;
       buttons_in = 4'b1000;
       #(10*clockPeriod);
       buttons_in = 4'b0000;
-      #(1050*clockPeriod);
+      #(30050*clockPeriod);
 
       // Teste 4 (manter chaves em 0100 por 1 periodo de clock)
 

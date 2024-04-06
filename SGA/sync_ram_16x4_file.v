@@ -41,7 +41,7 @@ module sync_ram_16x4_file #(
     always @ (posedge clk or posedge restart)
     begin
 	 if(restart) begin
-		  ram[0] <= 6'b000110;
+		  ram[0] <= 6'b001011;
           ram[1] <= 6'b000101;
 	 end else begin
 		 if (we)

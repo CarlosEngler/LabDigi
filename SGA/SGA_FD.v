@@ -24,6 +24,8 @@ module SGA_FD (
     input         register_apple,
     input         reset_apple,
     input         count_play_time,
+	  input         count_wait_time,
+    input         mux_apple,
     input         register_head,
     input         reset_head,
     input  [1:0]  direction,
@@ -40,6 +42,8 @@ module SGA_FD (
     input         velocity,
     input         register_game_parameters,
     input         reset_game_parameters,
+    input         clr_apple_counter,
+    input         count_apple_counter,
     input         register_eat_apple,
     input         reset_eat_apple,
     output        self_collision_on,
@@ -51,6 +55,7 @@ module SGA_FD (
     output [99:0] db_leds,
     output chosen_play_time,
     output end_move,
+	 output end_wait_time,
     output chosen_difficulty,
     output played,
     output wall_collision,
@@ -65,6 +70,7 @@ module SGA_FD (
 	  wire [5:0] s_position;
     wire [5:0] s_apple;
     wire [5:0] w_new_apple;
+    wire [5:0] s_new_apple;
     wire sinal;
     wire [5:0] head;
     wire [5:0] headXsoma;
@@ -84,6 +90,7 @@ module SGA_FD (
     wire w_dificuldade;
     wire w_mode;
     wire [5:0] w_apple;
+    wire [5:0] s_appleposition;
     wire w_velocity;
     wire w_wall_collision;
 
@@ -117,6 +124,18 @@ module SGA_FD (
       .half_rco ( )
     );
 
+     contador_163 apple_counter (
+      .clock( clock ),
+      .clr  ( ~clr_apple_counter ), 
+      .ld   ( 1'b1 ),
+      .enp  ( count_apple_counter ),
+      .ent  ( 1'b1 ),
+      .D    ( 6'd0 ), 
+      .Q    ( s_appleposition ),
+      .rco  (  ),
+      .half_rco ( )
+    );
+
     contador_negativo163 ram_counter (
       .clock( clock ),
       .clr  ( 1'b1 ), 
@@ -131,10 +150,10 @@ module SGA_FD (
     LFSR new_apple(
       .clk(clock),
       .rst(restart),
-      .out(w_new_apple)
+      .out(s_new_apple)
     );
 
-    contador_m #( .M(4000), .N(13) ) contador_de_jogada (
+    contador_m #( .M(8500), .N(20) ) contador_de_jogada (
       .clock  ( clock ),
       .zera_as( restart ),
       .zera_s ( render_count | zera_counter_play_time ),
@@ -144,6 +163,19 @@ module SGA_FD (
       .meio   ( w_end_play_time_half ),
       .quarto ()
     );
+	 
+	 contador_m #( .M(2000), .N(20) ) contador_de_comeu_maca (
+      .clock  ( clock ),
+      .zera_as( restart ),
+      .zera_s ( count_play_time ),
+      .conta  ( count_wait_time ),
+      .Q      (  ),
+      .fim    ( end_wait_time ),
+      .meio   (  ),
+      .quarto ()
+    );
+
+    assign w_new_apple = mux_apple ? s_appleposition : s_new_apple;
 
     registrador_6 apple_position (
         .clock ( clock ),
